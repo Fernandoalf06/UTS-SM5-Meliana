@@ -2,21 +2,21 @@
 
 Ringkasan singkat aplikasi web untuk menampilkan dan mengekspor jadwal Ujian Tengah Semester (UTS) serta menampilkan hitung mundur ke ujian berikutnya.
 
-## Fitur utama
-- Menampilkan daftar jadwal ujian yang dapat diurutkan. (Lihat fungsi [`populateSchedule`](index.html))
-- Hitung mundur ujian berikutnya dan status ujian (akan/sedang/selesai). (Lihat [`updateCountdown`](index.html) dan [`findNextExam`](index.html))
-- Tandai ujian sebagai selesai (disimpan ke localStorage). (Lihat [`saveCompletedStatus`](index.html) dan [`addCheckboxListeners`](index.html))
-- Tambah satu ujian ke Google Calendar. (Lihat [`generateGCalLink`](index.html))
-- Ekspor seluruh jadwal ke file `.ics`. (Lihat [`generateICSFile`](index.html))
-- PWA dengan Service Worker untuk caching offline. (Lihat [sw.js](sw.js) dan [manifest.json](manifest.json))
-
 ## Struktur file
-- [index.html](index.html) — Halaman aplikasi dan semua logika JavaScript (dataset `scheduleData`, UI, event handlers).
+- [index.html](index.html) — Halaman aplikasi dan semua logika JavaScript.
   - Variabel/data: [`scheduleData`](index.html)
   - Fungsi penting: [`populateSchedule`](index.html), [`sortData`](index.html), [`generateGCalLink`](index.html), [`generateICSFile`](index.html), [`updateCountdown`](index.html), [`findNextExam`](index.html), [`addCheckboxListeners`](index.html), [`formatDate`](index.html), [`saveCompletedStatus`](index.html)
-- [style.css](style.css) — Gaya lengkap aplikasi (variabel warna, komponen, responsive).
-- [sw.js](sw.js) — Service Worker PWA (cache-first strategy).
-- [manifest.json](manifest.json) — Manifest PWA (ikon, nama, warna tema).
+- [sw.js](sw.js) — Service Worker PWA (cache-first). Variabel penting: [`CACHE_NAME`](sw.js), [`FILES_TO_CACHE`](sw.js).
+- [manifest.json](manifest.json) — Metadata PWA (ikon, nama, warna tema).
+- [README.md](README.md) — Dokumen ini.
+
+## Fitur utama
+- Menampilkan daftar jadwal ujian yang dapat diurutkan (lihat [`populateSchedule`](index.html)).
+- Hitung mundur ujian berikutnya dan status ujian (akan/sedang/selesai) (lihat [`updateCountdown`](index.html) dan [`findNextExam`](index.html)).
+- Tandai ujian sebagai selesai (disimpan ke localStorage) (lihat [`saveCompletedStatus`](index.html) dan [`addCheckboxListeners`](index.html)).
+- Tambah satu ujian ke Google Calendar (lihat [`generateGCalLink`](index.html)).
+- Ekspor seluruh jadwal ke file `.ics` (lihat [`generateICSFile`](index.html)).
+- PWA dengan Service Worker untuk caching offline (lihat [sw.js](sw.js) dan [manifest.json](manifest.json)).
 
 ## Format data jadwal
 Contoh format yang dipakai di [index.html](index.html):
