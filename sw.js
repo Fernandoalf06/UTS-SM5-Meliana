@@ -1,93 +1,69 @@
-// Nama cache unik untuk versi aplikasi ini
-// Ubah ini (misal, 'jadwal-uts-v1.3') jika Anda mengubah file-file di FILES_TO_CACHE
-const CACHE_NAME = 'jadwal-uts-v1.2'; 
+/*
+  Service Worker untuk PWA Jadwal UTS
+  Versi: 2.0 (Disesuaikan untuk Tailwind CSS)
+*/
 
-// Daftar file inti yang diperlukan agar aplikasi berfungsi offline
-// Kita cache file utama, CSS, manifest, dan font.
+const CACHE_NAME = 'jadwal-uts-cache-v2.0';
 const FILES_TO_CACHE = [
   '/', // Alias untuk index.html
   'index.html',
-  'style.css', // CSS Semantik kita
   'manifest.json',
-  // 'https://cdn.tailwindcss.com', // <-- SUDAH DIHAPUS
-  'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap' // Font masih di-cache
+  'https://cdn.tailwindcss.com', // Skrip Tailwind CSS
+  'https://placehold.co/192x192/1e40af/ffffff?text=UTS', // Ikon PWA
+  'https://placehold.co/512x512/1e40af/ffffff?text=UTS'  // Ikon PWA
+  // style.css telah dihapus dari cache
 ];
 
-// Event 'install': Dipanggil saat Service Worker pertama kali diinstal
-self.addEventListener('install', (event) => {
-  console.log('[Service Worker] Install');
-  // Tunggu sampai cache selesai diisi
-  event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then((cache) => {
-        console.log('[Service Worker] Pre-caching file-file inti');
-        // Tambahkan semua file inti ke cache
-        return cache.addAll(FILES_TO_CACHE);
-      })
+// --- Instalasi Service Worker ---
+self.addEventListener('install', (evt) => {
+  console.log('[ServiceWorker] Install');
+  // Tunggu sampai cache dibuka dan semua file inti di-cache
+  evt.waitUntil(
+    caches.open(CACHE_NAME).then((cache) => {
+      console.log('[ServiceWorker] Pre-caching offline page');
+      return cache.addAll(FILES_TO_CACHE);
+    })
   );
-  // Paksa service worker yang baru untuk aktif (menggantikan yang lama jika ada)
   self.skipWaiting();
 });
 
-// Event 'activate': Dipanggil saat Service Worker aktif
-// Ini adalah tempat yang baik untuk membersihkan cache lama
-self.addEventListener('activate', (event) => {
-  console.log('[Service Worker] Activate');
-  event.waitUntil(
+// --- Aktivasi Service Worker ---
+self.addEventListener('activate', (evt) => {
+  console.log('[ServiceWorker] Activate');
+  // Hapus cache lama yang tidak sesuai dengan CACHE_NAME saat ini
+  evt.waitUntil(
     caches.keys().then((keyList) => {
       return Promise.all(keyList.map((key) => {
-        // Hapus cache lama yang tidak sama dengan CACHE_NAME
-        // (Ini akan menghapus 'v1.1' yang lama)
         if (key !== CACHE_NAME) {
-          console.log('[Service Worker] Menghapus cache lama', key);
+          console.log('[ServiceWorker] Removing old cache', key);
           return caches.delete(key);
         }
       }));
     })
   );
-  // Ambil kontrol atas semua halaman yang terbuka agar SW baru bisa langsung bekerja
-  return self.clients.claim();
+  self.clients.claim();
 });
 
-// Event 'fetch': Dipanggil setiap kali ada permintaan jaringan (request) dari PWA
-// Strategi: Cache-First (Utamakan Cache)
-self.addEventListener('fetch', (event) => {
-  // Kita hanya peduli pada request GET
-  if (event.request.method !== 'GET') {
+// --- Intercept Fetch Requests (Cache-First) ---
+self.addEventListener('fetch', (evt) => {
+  // Hanya tangani request GET
+  if (evt.request.method !== 'GET') {
     return;
   }
 
-  // Tanggapi dengan data dari cache terlebih dahulu
-  event.respondWith(
-    caches.match(event.request)
-      .then((response) => {
-        // Jika request ada di cache, kembalikan dari cache
-        if (response) {
-          // console.log('[Service Worker] Mengambil dari cache:', event.request.url);
-          return response;
-        }
-        
-        // Jika tidak ada di cache, ambil dari jaringan (network)
-        // console.log('[Service Worker] Mengambil dari jaringan:', event.request.url);
-        return fetch(event.request)
-          .then((networkResponse) => {
-            // (Opsional) Simpan response baru ke cache untuk request selanjutnya
-            // Kita perlu meng-clone response karena response hanya bisa dibaca sekali
-            const responseToCache = networkResponse.clone();
-            caches.open(CACHE_NAME)
-              .then((cache) => {
-                // Hanya cache resource yang berhasil (status 200)
-                if (networkResponse.ok && event.request.url.startsWith('http')) {
-                  cache.put(event.request, responseToCache);
-                }
-              });
-            return networkResponse;
-          })
-          .catch(() => {
-            // Jika offline dan tidak ada di cache, gagal
-            console.log('[Service Worker] Gagal mengambil dari jaringan (mungkin offline).');
-          });
-      })
+  console.log('[ServiceWorker] Fetch', evt.request.url);
+  // Strategi Cache-First
+  evt.respondWith(
+    caches.match(evt.request).then((response) => {
+      if (response) {
+        // Jika ada di cache, kembalikan dari cache
+        console.log('[ServiceWorker] Returning from cache', evt.request.url);
+        return response;
+      }
+      // Jika tidak ada di cache, fetch dari jaringan
+      console.log('[ServiceWorker] Fetching from network', evt.request.url);
+      return fetch(evt.request);
+    })
   );
 });
 
