@@ -5,50 +5,85 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Jadwal UTS - Meliana</title>
   
-  <!-- Tautan ke File CSS Semantik (BARU) -->
-  <link rel="stylesheet" href="style.css">
+  <!-- Memuat Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
   
-  <!-- Tautan Font (sekarang diimpor di style.css) -->
+  <!-- Memuat Font Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   
   <!-- PWA & Theme Tags -->
   <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#1e40af">
+  <meta name="theme-color" content="#1e40af"> <!-- Warna tema (biru) -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="JadwalUTS">
   <link rel="apple-touch-icon" href="https://placehold.co/192x192/1e40af/ffffff?text=UTS">
   
-  <!-- SKRIP TAILWIND CDN SUDAH DIHAPUS -->
+  <style>
+    /* * Gaya Kustom Tambahan 
+     * (Font default dan animasi)
+     */
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+    
+    /* Animasi fade-in sederhana */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .fade-in {
+      animation: fadeIn 0.5s ease-out forwards;
+      opacity: 0;
+    }
+    
+    /* Styling untuk countdown box (status live/finished) */
+    .countdown-box.live {
+      /* Diterjemahkan dari text-red-900 bg-red-100 border-red-300 */
+      background-color: #fee2e2;
+      border-color: #fca5a5;
+      color: #7f1d1d;
+    }
+    .countdown-box.finished {
+      /* Diterjemahkan dari text-green-900 bg-green-100 border-green-300 */
+      background-color: #dcfce7;
+      border-color: #86efac;
+      color: #14532d;
+    }
+  </style>
 </head>
-<body class="page-body">
+<body class="bg-gray-100 min-h-screen p-4 sm:p-8">
 
-  <div class="main-card">
-    <header class="card-header">
-      <h1 class="header-title">Jadwal UTS (Gasal 2025/2026)</h1>
-      <p class="header-subtitle">Meliana Gita Puspitasari - 1123210254</p>
+  <!-- Kartu Utama -->
+  <div class="w-full max-w-4xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden fade-in" style="animation-delay: 100ms;">
+    <header class="p-6 bg-blue-800 text-white">
+      <h1 class="text-2xl font-bold">Jadwal UTS (Gasal 2025/2026)</h1>
+      <p class="text-blue-200 mt-1">Meliana Gita Puspitasari - 1123210254</p>
     </header>
 
-    <main class="card-body">
+    <main class="p-4 sm:p-6">
       
       <!-- Kontainer Hitung Mundur -->
-      <div id="countdown-container" class="countdown-box">
-        <p id="countdown-title" class="countdown-title">Ujian Berikutnya:</p>
-        <h2 id="countdown-subject" class="countdown-subject">Memuat...</h2>
-        <p id="countdown-timer" class="countdown-timer">-- hari, -- jam, -- menit, -- detik</p>
+      <div id="countdown-container" class="countdown-box border border-blue-200 bg-blue-50 text-blue-900 rounded-lg p-4 mb-6 text-center opacity-0 transition-all duration-500">
+        <p id="countdown-title" class="text-sm font-medium text-blue-700">Ujian Berikutnya:</p>
+        <h2 id="countdown-subject" class="text-xl font-bold my-1">Memuat...</h2>
+        <p id="countdown-timer" class="text-lg font-mono">-- hari, -- jam, -- menit, -- detik</p>
       </div>
 
       <!-- Kontrol Urutkan & Ekspor -->
-      <div class="controls">
-        <div class="sort-control">
-          <label for="sort" class="sort-label">Urutkan:</label>
-          <select id="sort" class="sort-select">
+      <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
+        <div class="flex items-center gap-2">
+          <label for="sort" class="text-sm font-medium text-gray-700">Urutkan:</label>
+          <select id="sort" class="rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
             <option value="date" selected>Tanggal Ujian (Terdekat)</option>
             <option value="alphabetical">Nama Mata Kuliah (A-Z)</option>
           </select>
         </div>
         
-        <button id="export-all" class="btn btn-export">
-          <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+        <button id="export-all" class="flex items-center justify-center gap-2 px-4 py-2 bg-green-600 text-white font-medium rounded-md shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
             <path d="M10.75 2.75a.75.75 0 00-1.5 0v8.614L6.295 8.235a.75.75 0 10-1.09 1.03l4.25 4.5a.75.75 0 001.09 0l4.25-4.5a.75.75 0 00-1.09-1.03l-2.955 3.129V2.75z" />
             <path d="M3.5 12.75a.75.75 0 00-1.5 0v2.5A2.75 2.75 0 004.75 18h10.5A2.75 2.75 0 0018 15.25v-2.5a.75.75 0 00-1.5 0v2.5a1.25 1.25 0 01-1.25 1.25H4.75A1.25 1.25 0 013.5 15.25v-2.5z" />
           </svg>
@@ -57,17 +92,22 @@
       </div>
 
       <!-- Daftar Jadwal -->
-      <div id="schedule-list" class="schedule-list">
+      <div id="schedule-list" class="grid grid-cols-1 gap-4">
         <!-- Kartu jadwal akan di-generate oleh JS di sini -->
       </div>
       
     </main>
   </div>
   
-  <footer class="page-footer">
+  <footer class="text-center text-gray-500 text-sm mt-8 pb-4">
     Dibuat dengan ❤️
   </footer>
 
+  <!--
+  ================================================================
+  SCRIPT APLIKASI UTAMA
+  ================================================================
+  -->
   <script>
     // --- DATABASE JADWAL ---
     // Di-hardcode dari PDF
@@ -90,15 +130,6 @@
       // Event Listeners
       document.getElementById('sort').addEventListener('change', populateSchedule);
       document.getElementById('export-all').addEventListener('click', generateICSFile);
-      
-      // Registrasi Service Worker
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('sw.js')
-            .then(reg => console.log('Service Worker terdaftar:', reg.scope))
-            .catch(err => console.error('Pendaftaran Service Worker gagal:', err));
-        });
-      }
     });
 
     // --- FUNGSI UNTUK MENGISI JADWAL KE HTML ---
@@ -122,40 +153,45 @@
       // 2. Generate HTML untuk setiap item
       processedData.forEach((item, index) => {
         const card = document.createElement('div');
-        // Gunakan kelas CSS semantik (BARU)
-        card.className = 'schedule-card fade-in';
+        
+        // Menerapkan kelas Tailwind untuk kartu jadwal
+        // PERBAIKAN: Terapkan flex-col & p-6 langsung ke kartu utama
+        card.className = 'border border-gray-200 rounded-lg shadow-md bg-white flex flex-col justify-between gap-3 fade-in p-6';
         card.style.animationDelay = `${index * 50}ms`; // Efek stagger
         
         const gcalLink = createGoogleCalendarLink(item);
         const { dayName, date } = formatDateTime(item.dateTime);
 
-        // --- TEMPLATE KARTU (DIUBAH) ---
-        // Menggunakan kelas semantik dari style.css
+        // PERBAIKAN: Hapus wrapper div yang tidak perlu
         card.innerHTML = `
-          <div class="card-info">
-            <span class="card-date">${dayName}, ${date}</span>
-            <h3 class="card-subject">${item.matkul}</h3>
-            <div class="card-details">
-              <div class="detail-item">
-                <svg class="detail-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm.75-13a.75.75 0 00-1.5 0v5c0 .414.336.75.75.75h4a.75.75 0 000-1.5H10V5z" clip-rule="evenodd" /></svg>
+          <div>
+            <span class="block text-sm text-gray-600">${dayName}, ${date}</span>
+            <h3 class="text-xl font-semibold text-gray-900 mt-1">${item.matkul}</h3>
+            
+            <div class="mt-4 grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-2 text-sm text-gray-700">
+              <!-- Detail Waktu -->
+              <div class="flex items-center gap-1.5">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 text-gray-400"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm.75-13a.75.75 0 00-1.5 0v5c0 .414.336.75.75.75h4a.75.75 0 000-1.5H10V5z" clip-rule="evenodd" /></svg>
                 ${item.jam} WIB
               </div>
-              <div class="detail-item">
-                <svg class="detail-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9.69 18.233c.256.056.516.084.783.111a.75.75 0 00.233-1.482 11.455 11.455 0 00-.783-.11c-4.341-.96-7.387-4.6-7.387-9.006 0-5.03 4.123-9.13 9.183-9.13s9.183 4.1 9.183 9.13c0 4.406-3.046 8.046-7.387 9.006zM10 1.5a7.63 7.63 0 00-7.683 7.63c0 3.864 2.657 7.07 6.183 7.585a.75.75 0 00.233-1.482 6.155 6.155 0 01-4.918-6.103 6.183 6.183 0 1112.366 0c0 2.454-1.43 4.595-3.518 5.62a.75.75 0 10.598 1.348 7.683 7.683 0 005.01-7.01C17.683 5.63 14.16 1.5 10 1.5z" clip-rule="evenodd" /></svg>
-                Ruang: <span class="font-medium">${item.ruang}</span>
+              <!-- Detail Ruang -->
+              <div class="flex items-center gap-1.5">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 text-gray-400"><path fill-rule="evenodd" d="M9.69 18.233c.256.056.516.084.783.111a.75.75 0 00.233-1.482 11.455 11.455 0 00-.783-.11c-4.341-.96-7.387-4.6-7.387-9.006 0-5.03 4.123-9.13 9.183-9.13s9.183 4.1 9.183 9.13c0 4.406-3.046 8.046-7.387 9.006zM10 1.5a7.63 7.63 0 00-7.683 7.63c0 3.864 2.657 7.07 6.183 7.585a.75.75 0 00.233-1.482 6.155 6.155 0 01-4.918-6.103 6.183 6.183 0 1112.366 0c0 2.454-1.43 4.595-3.518 5.62a.75.75 0 10.598 1.348 7.683 7.683 0 005.01-7.01C17.683 5.63 14.16 1.5 10 1.5z" clip-rule="evenodd" /></svg>
+                Ruang: <span class="font-medium text-gray-900">${item.ruang}</span>
               </div>
-              <div class="detail-item">
-                <svg class="detail-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M11.983 1.907a.75.75 0 00-1.966 0A11.19 11.19 0 013 5.234V5.75a.75.75 0 001.5 0V5.234a9.69 9.69 0 007.031-2.95.75.75 0 00-.548-.377zM12.25 4.5a.75.75 0 00-1.5 0v.234a9.69 9.69 0 007.031 2.95.75.75 0 00-.548.377A11.19 11.19 0 0113 5.234V4.5zM8.017 1.907a.75.75 0 00.548.377A9.69 9.69 0 001.5 5.234V5.75a.75.75 0 01-1.5 0V5.234A11.19 11.19 0 017 1.907a.75.75 0 001.017 0zM7.75 4.5a.75.75 0 011.5 0v.234A9.69 9.69 0 002.219 7.684a.75.75 0 11-.548-.377A11.19 11.19 0 017 4.5v-.234zM16 9.75a.75.75 0 01.75.75v5.034a1.12 1.12 0 01-.32 1.99 1.12 1.12 0 01-1.93-.001A1.12 1.12 0 0114.5 15.534V10.5a.75.75 0 01.75-.75zm-3 0a.75.75 0 01.75.75v5.034a1.12 1.12 0 01-.32 1.99 1.12 1.12 0 01-1.93-.001A1.12 1.12 0 0111.5 15.534V10.5a.75.75 0 01.75-.75zm-3 0a.75.75 0 01.75.75v5.034a1.12 1.12 0 01-.32 1.99 1.12 1.12 0 01-1.93-.001A1.12 1.12 0 018.5 15.534V10.5a.75.75 0 01.75-.75zm-3 0a.75.75 0 01.75.75v5.034a1.12 1.12 0 01-.32 1.99 1.12 1.12 0 01-1.93-.001A1.12 1.12 0 015.5 15.534V10.5a.75.75 0 01.75-.75z" /></svg>
-                Kursi: <span class="font-medium">${item.kursi}</span>
+              <!-- Detail Kursi -->
+              <div class="flex items-center gap-1.5">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 text-gray-400"><path d="M11.983 1.907a.75.75 0 00-1.966 0A11.19 11.19 0 013 5.234V5.75a.75.75 0 001.5 0V5.234a9.69 9.69 0 007.031-2.95.75.75 0 00-.548-.377zM12.25 4.5a.75.75 0 00-1.5 0v.234a9.69 9.69 0 007.031 2.95.75.75 0 00-.548.377A11.19 11.19 0 0113 5.234V4.5zM8.017 1.907a.75.75 0 00.548.377A9.69 9.69 0 001.5 5.234V5.75a.75.75 0 01-1.5 0V5.234A11.19 11.19 0 017 1.907a.75.75 0 001.017 0zM7.75 4.5a.75.75 0 011.5 0v.234A9.69 9.69 0 002.219 7.684a.75.75 0 11-.548-.377A11.19 11.19 0 017 4.5v-.234zM16 9.75a.75.75 0 01.75.75v5.034a1.12 1.12 0 01-.32 1.99 1.12 1.12 0 01-1.93-.001A1.12 1.12 0 0114.5 15.534V10.5a.75.75 0 01.75-.75zm-3 0a.75.75 0 01.75.75v5.034a1.12 1.12 0 01-.32 1.99 1.12 1.12 0 01-1.93-.001A1.12 1.12 0 0111.5 15.534V10.5a.75.75 0 01.75-.75zm-3 0a.75.75 0 01.75.75v5.034a1.12 1.12 0 01-.32 1.99 1.12 1.12 0 01-1.93-.001A1.12 1.12 0 018.5 15.534V10.5a.75.75 0 01.75-.75zm-3 0a.75.75 0 01.75.75v5.034a1.12 1.12 0 01-.32 1.99 1.12 1.12 0 01-1.93-.001A1.12 1.12 0 015.5 15.534V10.5a.75.75 0 01.75-.75z" /></svg>
+                Kursi: <span class="font-medium text-gray-900">${item.kursi}</span>
               </div>
             </div>
           </div>
-          <div class="card-action">
-            <a href="${gcalLink}" target="_blank" rel="noopener noreferrer" class="btn btn-gcal">
-              <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M15.75 2a.75.75 0 00-.75.75v1.5h-3v-1.5a.75.75 0 00-1.5 0v1.5H9v-1.5a.75.75 0 00-1.5 0v1.5H4.5v-1.5a.75.75 0 00-1.5 0v1.5A2.75 2.75 0 001.25 7v8.5A2.75 2.75 0 004 18.25h12a2.75 2.75 0 002.75-2.75V7A2.75 2.75 0 0016.25 4.25v-1.5A.75.75 0 0015.75 2zM1.25 10a.75.75 0 01.75-.75h16a.75.75 0 010 1.5h-16a.75.75 0 01-.75-.75zm.75 2.25a.75.75 0 000 1.5h.008a.75.75 0 000-1.5H2zm2.25.75a.75.75 0 01.75-.75h.008a.75.75 0 010 1.5H5a.75.75 0 01-.75-.75zM7.25 13a.75.75 0 000 1.5h.008a.75.75 0 000-1.5H7.25zM10 13.75a.75.75 0 01.75-.75h.008a.75.75 0 010 1.5H10.75a.75.75 0 01-.75-.75zm2.25.75a.75.75 0 000-1.5h.008a.75.75 0 000 1.5H12.25z" /></svg>
-              Tambah ke Kalender
-            </a>
-          </div>
+          
+          <!-- Tombol Aksi -->
+          <a href="${gcalLink}" target="_blank" rel="noopener noreferrer" class="w-full mt-2 flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white font-medium rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5"><path d="M15.75 2a.75.75 0 00-.75.75v1.5h-3v-1.5a.75.75 0 00-1.5 0v1.5H9v-1.5a.75.75 0 00-1.5 0v1.5H4.5v-1.5a.75.75 0 00-1.5 0v1.5A2.75 2.75 0 001.25 7v8.5A2.75 2.75 0 004 18.25h12a2.75 2.75 0 002.75-2.75V7A2.75 2.75 0 0016.25 4.25v-1.5A.75.75 0 0015.75 2zM1.25 10a.75.75 0 01.75-.75h16a.75.75 0 010 1.5h-16a.75.75 0 01-.75-.75zm.75 2.25a.75.75 0 000 1.5h.008a.75.75 0 000-1.5H2zm2.25.75a.75.75 0 01.75-.75h.008a.75.75 0 010 1.5H5a.75.75 0 01-.75-.75zM7.25 13a.75.75 0 000 1.5h.008a.75.75 0 000-1.5H7.25zM10 13.75a.75.75 0 01.75-.75h.008a.75.75 0 010 1.5H10.75a.75.75 0 01-.75-.75zm2.25.75a.75.75 0 000-1.5h.008a.75.75 0 000 1.5H12.25z" /></svg>
+            Tambah ke Kalender
+          </a>
         `;
         
         scheduleList.appendChild(card);
@@ -194,10 +230,10 @@
       const timerEl = document.getElementById('countdown-timer');
       const titleEl = document.getElementById('countdown-title');
       
-      container.classList.add('fade-in'); // Tampilkan boks
+      container.style.opacity = 1; // Tampilkan boks
       
       if (!nextExam) {
-        container.className = 'countdown-box fade-in finished';
+        container.classList.add('finished');
         titleEl.textContent = 'Semua Ujian Selesai!';
         subjectEl.textContent = 'Selamat!';
         timerEl.textContent = 'Anda berhasil menyelesaikan semester ini.';
@@ -211,7 +247,7 @@
 
       if (distance > 0) {
         // Ujian Belum Mulai (Hitung Mundur)
-        container.className = 'countdown-box fade-in';
+        container.classList.remove('live', 'finished');
         titleEl.textContent = 'Ujian Berikutnya:';
         subjectEl.textContent = nextExam.matkul;
         
@@ -225,7 +261,8 @@
         // Ujian Sedang Berlangsung (Asumsi durasi 3 jam)
         const examEnd = examTime + (3 * 60 * 60 * 1000);
         if (now < examEnd) {
-          container.className = 'countdown-box fade-in live';
+          container.classList.add('live');
+          container.classList.remove('finished');
           titleEl.textContent = 'Sedang Berlangsung!';
           subjectEl.textContent = nextExam.matkul;
           timerEl.textContent = `Ujian berlangsung hingga ${formatTime(new Date(examEnd))}`;
@@ -266,6 +303,7 @@
       if (isAllDay) {
         return date.toISOString().slice(0, 10).replace(/-/g, '');
       }
+      // Mengembalikan waktu dalam UTC (diakhiri 'Z')
       return date.toISOString().replace(/-/g, '').replace(/:/g, '').slice(0, 15) + 'Z';
     }
 
@@ -279,9 +317,18 @@
       
       const details = `Mata Kuliah: ${item.matkul}\nKelas: ${item.kelas}\nRuang: ${item.ruang}\nKursi: ${item.kursi}\nSKS: ${item.sks}`;
       
-      // Format YYYYMMDDTHHMMSSZ
-      const startTimeISO = formatISO(startTime).slice(0, -1); // Hapus Z untuk format Google
-      const endTimeISO = formatISO(endTime).slice(0, -1);
+      // Google Calendar menggunakan format YYYYMMDDTHHMMSS/YYYYMMDDTHHMMSS
+      // dan mengharapkan waktu lokal (tanpa Z) jika ctz (timezone) disediakan.
+      
+      // Fungsi untuk format YYYYMMDDTHHMMSS (Lokal, non-UTC)
+      const formatLocalISO = (dt) => {
+          const pad = (num) => num.toString().padStart(2, '0');
+          return `${dt.getFullYear()}${pad(dt.getMonth() + 1)}${pad(dt.getDate())}` +
+                 `T${pad(dt.getHours())}${pad(dt.getMinutes())}${pad(dt.getSeconds())}`;
+      };
+
+      const startTimeISO = formatLocalISO(startTime);
+      const endTimeISO = formatLocalISO(endTime);
       
       const params = new URLSearchParams({
         action: 'TEMPLATE',
@@ -309,17 +356,24 @@
         dateTime: parseDateString(item.tanggal, item.jam)
       })).sort((a, b) => a.dateTime - b.dateTime);
 
+      // Format ISO (UTC) untuk file ICS
+      const formatICSIso = (date) => {
+        return date.toISOString().replace(/-/g, '').replace(/:/g, '').slice(0, 15) + 'Z';
+      }
+      
       sortedData.forEach(item => {
         const startTime = item.dateTime;
         const endTime = new Date(startTime.getTime() + (3 * 60 * 60 * 1000)); // Durasi 3 jam
-        const uid = `${formatISO(startTime)}-${item.matkul.replace(/\s+/g, '')}@jadwaluts.meliana`;
+        const uid = `${formatICSIso(startTime)}-${item.matkul.replace(/\s+/g, '')}@jadwaluts.meliana`;
         
+        // Catatan: ICS standar menggunakan waktu UTC (Z)
+        // Atau bisa menggunakan TZID jika VTIMEZONE didefinisikan, tapi UTC lebih aman.
         icsContent.push(
           'BEGIN:VEVENT',
-          `DTSTAMP:${formatISO(new Date())}`,
+          `DTSTAMP:${formatICSIso(new Date())}`,
           `UID:${uid}`,
-          `DTSTART;TZID=Asia/Jakarta:${formatISO(startTime).slice(0, 15)}`,
-          `DTEND;TZID=Asia/Jakarta:${formatISO(endTime).slice(0, 15)}`,
+          `DTSTART:${formatICSIso(startTime)}`,
+          `DTEND:${formatICSIso(endTime)}`,
           `SUMMARY:UTS: ${item.matkul}`,
           `LOCATION:Ruang ${item.ruang}`,
           `DESCRIPTION:Mata Kuliah: ${item.matkul}\\nKelas: ${item.kelas}\\nRuang: ${item.ruang}\\nKursi: ${item.kursi}\\nSKS: ${item.sks}`,
@@ -338,7 +392,25 @@
       link.click();
       document.body.removeChild(link);
     }
-    
+  </script>
+  
+  <!--
+  ================================================================
+  SCRIPT REGISTRASI SERVICE WORKER (PWA)
+  ================================================================
+  -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js')
+          .then(reg => {
+            console.log('Service Worker terdaftar:', reg.scope);
+          })
+          .catch(err => {
+            console.error('Pendaftaran Service Worker gagal:', err);
+          });
+      });
+    }
   </script>
 </body>
 </html>
