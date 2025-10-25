@@ -1,72 +1,61 @@
-# Jadwal UTS ke Google Calendar
+# Jadwal UTS (Meliana) — Dokumentasi Repo
 
-Aplikasi berbasis web untuk membantu mahasiswa mengelola jadwal Ujian Tengah Semester (UTS) dengan mudah. Aplikasi ini memungkinkan pengguna untuk melihat jadwal ujian, menghitung mundur waktu menuju ujian berikutnya, dan mengekspor jadwal ke Google Calendar atau file `.ics`.
+Ringkasan singkat aplikasi web untuk menampilkan dan mengekspor jadwal Ujian Tengah Semester (UTS) serta menampilkan hitung mundur ke ujian berikutnya.
 
-## Fitur
+## Fitur utama
+- Menampilkan daftar jadwal ujian yang dapat diurutkan. (Lihat fungsi [`populateSchedule`](index.html))
+- Hitung mundur ujian berikutnya dan status ujian (akan/sedang/selesai). (Lihat [`updateCountdown`](index.html) dan [`findNextExam`](index.html))
+- Tandai ujian sebagai selesai (disimpan ke localStorage). (Lihat [`saveCompletedStatus`](index.html) dan [`addCheckboxListeners`](index.html))
+- Tambah satu ujian ke Google Calendar. (Lihat [`generateGCalLink`](index.html))
+- Ekspor seluruh jadwal ke file `.ics`. (Lihat [`generateICSFile`](index.html))
+- PWA dengan Service Worker untuk caching offline. (Lihat [sw.js](sw.js) dan [manifest.json](manifest.json))
 
-1. **Hitung Mundur Ujian Berikutnya**  
-   Menampilkan waktu hitung mundur menuju ujian berikutnya secara real-time.
+## Struktur file
+- [index.html](index.html) — Halaman aplikasi dan semua logika JavaScript (dataset `scheduleData`, UI, event handlers).
+  - Variabel/data: [`scheduleData`](index.html)
+  - Fungsi penting: [`populateSchedule`](index.html), [`sortData`](index.html), [`generateGCalLink`](index.html), [`generateICSFile`](index.html), [`updateCountdown`](index.html), [`findNextExam`](index.html), [`addCheckboxListeners`](index.html), [`formatDate`](index.html), [`saveCompletedStatus`](index.html)
+- [style.css](style.css) — Gaya lengkap aplikasi (variabel warna, komponen, responsive).
+- [sw.js](sw.js) — Service Worker PWA (cache-first strategy).
+- [manifest.json](manifest.json) — Manifest PWA (ikon, nama, warna tema).
 
-2. **Pengurutan Jadwal**  
-   Jadwal ujian dapat diurutkan berdasarkan:
-   - Tanggal ujian (terdekat)
-   - Nama mata kuliah (A-Z)
-
-3. **Ekspor Jadwal ke Google Calendar**  
-   Setiap jadwal ujian dapat ditambahkan langsung ke Google Calendar dengan satu klik.
-
-4. **Ekspor Semua Jadwal ke File `.ics`**  
-   Semua jadwal ujian dapat diekspor ke file `.ics` yang kompatibel dengan berbagai aplikasi kalender.
-
-## Teknologi yang Digunakan
-
-- **HTML**: Struktur halaman web.
-- **CSS**: Menggunakan [Tailwind CSS](https://tailwindcss.com) untuk desain responsif dan modern.
-- **JavaScript**: Logika aplikasi, termasuk pengelolaan jadwal, hitung mundur, dan ekspor jadwal.
-
-## Cara Menggunakan
-
-1. **Buka Aplikasi**  
-   Cukup buka file `index.html` di browser Anda.
-
-2. **Lihat Jadwal Ujian**  
-   Jadwal ujian akan dimuat secara otomatis di halaman utama.
-
-3. **Hitung Mundur Ujian Berikutnya**  
-   Bagian atas halaman akan menampilkan hitung mundur menuju ujian berikutnya.
-
-4. **Ekspor Jadwal**  
-   - Klik tombol "Tambah ke Kalender" untuk menambahkan jadwal ke Google Calendar.
-   - Klik tombol "Ekspor Semua" untuk mengunduh file `.ics` yang berisi semua jadwal.
-
-## Struktur Data Jadwal
-
-Data jadwal ujian disimpan dalam array JavaScript dengan format berikut:
-
+## Format data jadwal
+Contoh format yang dipakai di [index.html](index.html):
 ```javascript
 const scheduleData = [
-    {
-        "kodeMK": "11034578",
-        "mataKuliah": "Manajemen Strategi",
-        "kelas": "G",
-        "tanggal": "27-10-2025",
-        "jam": "14:00",
-        "ruang": "401",
-        "kursi": "25"
-    },
-    // Jadwal lainnya...
+  {
+    id: "MAN401",
+    date: "2025-10-27", // YYYY-MM-DD
+    time: "14:00",      // HH:mm (WIB)
+    subject: "Manajemen Strategi",
+    room: "401",
+    seat: "25",
+    day: "Senin"
+  },
+  // ...
 ];
 ```
 
-## Catatan
+Durasi default setiap ujian: 2 jam (dipakai oleh [`generateGCalLink`](index.html) dan [`generateICSFile`](index.html)).
 
-- Durasi setiap ujian diasumsikan 2 jam. Pastikan untuk memeriksa kembali detail di Google Calendar sebelum menyimpan.
-- Zona waktu yang digunakan adalah **Asia/Jakarta**.
+## Cara pakai (end-user)
+1. Buka [index.html](index.html) pada browser modern.
+2. Gunakan dropdown "Urutkan" untuk memilih urutan.
+3. Klik "Tambah ke Kalender" pada kartu untuk membuka Google Calendar dengan detail acara (fungsi [`generateGCalLink`](index.html)).
+4. Klik "Ekspor Semua (.ics)" untuk mengunduh file kalender (`generateICSFile`).
+
+## PWA / Offline
+- Service Worker: [sw.js](sw.js) — mendaftarkan cache (lihat constant `CACHE_NAME` dan `FILES_TO_CACHE` di file tersebut).
+- Manifest: [manifest.json](manifest.json) — metadata PWA dan ikon.
+
+## Pengembangan
+- Styling utama ada di [style.css](style.css). Untuk menyesuaikan tema/warna, ubah variabel di :root.
+- Logika UI dan export berada di [index.html](index.html). Untuk menambah field pada jadwal, perbarui `scheduleData` dan fungsi rendering (`populateSchedule`).
 
 ## Kontribusi
-
-Kontribusi sangat diterima! Jika Anda memiliki ide untuk meningkatkan aplikasi ini, silakan buat pull request atau buka issue di repositori ini.
+- Buat pull request atau issue dengan deskripsi perubahan.
+- Jaga konsistensi format tanggal (`YYYY-MM-DD`) dan waktu (`HH:mm`).
 
 ## Lisensi
+Proyek ini menggunakan lisensi MIT (sesuaikan jika diperlukan).
 
-Proyek ini dilisensikan di bawah [MIT License](LICENSE).
+-- selesai --
