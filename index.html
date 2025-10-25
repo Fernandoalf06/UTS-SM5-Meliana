@@ -1,417 +1,360 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Jadwal UTS - Meliana</title>
-  
-  <!-- Memuat Tailwind CSS via CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  
-  <!-- Memuat Font Inter -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  
-  <!-- PWA & Theme Tags -->
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#1e40af"> <!-- Warna tema (biru) -->
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="JadwalUTS">
-  <link rel="apple-touch-icon" href="https://placehold.co/192x192/1e40af/ffffff?text=UTS">
-  
-  <style>
-    /* * Gaya Kustom Tambahan 
-     * (Font default dan animasi)
-     */
-    body {
-      font-family: 'Inter', sans-serif;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jadwal UTS - 1123210254</title>
+    <!-- Memuat Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
     
-    /* Animasi fade-in sederhana */
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .fade-in {
-      animation: fadeIn 0.5s ease-out forwards;
-      opacity: 0;
-    }
+    <!-- Konfigurasi PWA -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#1e40af">
     
-    /* Styling untuk countdown box (status live/finished) */
-    .countdown-box.live {
-      /* Diterjemahkan dari text-red-900 bg-red-100 border-red-300 */
-      background-color: #fee2e2;
-      border-color: #fca5a5;
-      color: #7f1d1d;
-    }
-    .countdown-box.finished {
-      /* Diterjemahkan dari text-green-900 bg-green-100 border-green-300 */
-      background-color: #dcfce7;
-      border-color: #86efac;
-      color: #14532d;
-    }
-  </style>
+    <!-- Ikon Apple Touch -->
+    <link rel="apple-touch-icon" href="https://placehold.co/192x192/1e40af/ffffff?text=UTS">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Menggunakan font Inter sebagai default */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Animasi fade-in */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        /* Style untuk hitung mundur */
+        .countdown-box {
+            background: linear-gradient(135deg, #2563eb, #1e40af);
+            animation: fadeIn 0.5s ease-out;
+        }
+        /* Menghilangkan panah di input number */
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+    </style>
 </head>
-<body class="bg-gray-100 min-h-screen p-4 sm:p-8">
+<body class="bg-gray-100 p-4 sm:p-8">
 
-  <!-- Kartu Utama -->
-  <div class="w-full max-w-4xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden fade-in" style="animation-delay: 100ms;">
-    <header class="p-6 bg-blue-800 text-white">
-      <h1 class="text-2xl font-bold">Jadwal UTS (Gasal 2025/2026)</h1>
-      <p class="text-blue-200 mt-1">Meliana Gita Puspitasari - 1123210254</p>
-    </header>
+    <div class="w-full max-w-4xl mx-auto">
+        <!-- Header -->
+        <header class="mb-6 fade-in">
+            <h1 class="text-3xl font-bold text-gray-900">Jadwal UTS (Gasal 2025/2026)</h1>
+            <p class="text-lg text-gray-600">Meliana Gita Puspitasari (1123210254)</p>
+        </header>
 
-    <main class="p-4 sm:p-6">
-      
-      <!-- Kontainer Hitung Mundur -->
-      <div id="countdown-container" class="countdown-box border border-blue-200 bg-blue-50 text-blue-900 rounded-lg p-4 mb-6 text-center opacity-0 transition-all duration-500">
-        <p id="countdown-title" class="text-sm font-medium text-blue-700">Ujian Berikutnya:</p>
-        <h2 id="countdown-subject" class="text-xl font-bold my-1">Memuat...</h2>
-        <p id="countdown-timer" class="text-lg font-mono">-- hari, -- jam, -- menit, -- detik</p>
-      </div>
-
-      <!-- Kontrol Urutkan & Ekspor -->
-      <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
-        <div class="flex items-center gap-2">
-          <label for="sort" class="text-sm font-medium text-gray-700">Urutkan:</label>
-          <select id="sort" class="rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-            <option value="date" selected>Tanggal Ujian (Terdekat)</option>
-            <option value="alphabetical">Nama Mata Kuliah (A-Z)</option>
-          </select>
+        <!-- Boks Hitung Mundur -->
+        <div id="countdownBox" class="countdown-box text-white p-5 rounded-lg shadow-lg mb-6 hidden">
+            <h2 class="text-lg font-semibold">Ujian Berikutnya:</h2>
+            <p id="nextExamSubject" class="text-2xl font-bold"></p>
+            <p id="countdownTimer" class="text-xl mt-1"></p>
         </div>
-        
-        <button id="export-all" class="flex items-center justify-center gap-2 px-4 py-2 bg-green-600 text-white font-medium rounded-md shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
-            <path d="M10.75 2.75a.75.75 0 00-1.5 0v8.614L6.295 8.235a.75.75 0 10-1.09 1.03l4.25 4.5a.75.75 0 001.09 0l4.25-4.5a.75.75 0 00-1.09-1.03l-2.955 3.129V2.75z" />
-            <path d="M3.5 12.75a.75.75 0 00-1.5 0v2.5A2.75 2.75 0 004.75 18h10.5A2.75 2.75 0 0018 15.25v-2.5a.75.75 0 00-1.5 0v2.5a1.25 1.25 0 01-1.25 1.25H4.75A1.25 1.25 0 013.5 15.25v-2.5z" />
-          </svg>
-          Ekspor Semua
-        </button>
-      </div>
 
-      <!-- Daftar Jadwal -->
-      <div id="schedule-list" class="grid grid-cols-1 gap-4">
-        <!-- Kartu jadwal akan di-generate oleh JS di sini -->
-      </div>
-      
-    </main>
-  </div>
-  
-  <footer class="text-center text-gray-500 text-sm mt-8 pb-4">
-    Dibuat dengan ❤️
-  </footer>
-
-  <!--
-  ================================================================
-  SCRIPT APLIKASI UTAMA
-  ================================================================
-  -->
-  <script>
-    // --- DATABASE JADWAL ---
-    // Di-hardcode dari PDF
-    const scheduleData = [
-      { matkul: "Seminar Pemasaran Kreatif", sks: 3, kelas: "A", tanggal: "30-10-2025", jam: "08:30", ruang: "406", kursi: "19" },
-      { matkul: "Metodologi Penelitian", sks: 3, kelas: "A", tanggal: "04-11-2025", jam: "08:30", ruang: "401", kursi: "16" },
-      { matkul: "Manajemen Strategi", sks: 3, kelas: "G", tanggal: "27-10-2025", jam: "14:00", ruang: "401", kursi: "25" },
-      { matkul: "Penjenamaan atau Merek", sks: 4, kelas: "A", tanggal: "31-10-2025", jam: "08:30", ruang: "401", kursi: "25" },
-      { matkul: "Manajemen Investasi", sks: 3, kelas: "A", tanggal: "03-11-2025", jam: "08:30", ruang: "401", kursi: "25" },
-      { matkul: "Komunikasi Bisnis", sks: 3, kelas: "B", tanggal: "30-10-2025", jam: "14:00", ruang: "406", kursi: "25" },
-      { matkul: "Perilaku Konsumen", sks: 3, kelas: "A", tanggal: "28-10-2025", jam: "08:30", ruang: "401", kursi: "25" }
-    ];
-
-    // --- FUNGSI UTAMA ---
-    document.addEventListener('DOMContentLoaded', () => {
-      // Inisialisasi
-      populateSchedule();
-      startCountdown();
-
-      // Event Listeners
-      document.getElementById('sort').addEventListener('change', populateSchedule);
-      document.getElementById('export-all').addEventListener('click', generateICSFile);
-    });
-
-    // --- FUNGSI UNTUK MENGISI JADWAL KE HTML ---
-    function populateSchedule() {
-      const scheduleList = document.getElementById('schedule-list');
-      const sortValue = document.getElementById('sort').value;
-      scheduleList.innerHTML = ''; // Kosongkan daftar
-
-      // 1. Parsing & Sorting Data
-      const processedData = scheduleData.map(item => ({
-        ...item,
-        // Konversi tanggal & jam ke objek Date
-        dateTime: parseDateString(item.tanggal, item.jam)
-      })).sort((a, b) => {
-        if (sortValue === 'alphabetical') {
-          return a.matkul.localeCompare(b.matkul); // Urut A-Z
-        }
-        return a.dateTime - b.dateTime; // Urut tanggal (default)
-      });
-
-      // 2. Generate HTML untuk setiap item
-      processedData.forEach((item, index) => {
-        const card = document.createElement('div');
-        
-        // Menerapkan kelas Tailwind untuk kartu jadwal
-        // PERBAIKAN: Terapkan flex-col & p-6 langsung ke kartu utama
-        card.className = 'border border-gray-200 rounded-lg shadow-md bg-white flex flex-col justify-between gap-3 fade-in p-6';
-        card.style.animationDelay = `${index * 50}ms`; // Efek stagger
-        
-        const gcalLink = createGoogleCalendarLink(item);
-        const { dayName, date } = formatDateTime(item.dateTime);
-
-        // PERBAIKAN: Hapus wrapper div yang tidak perlu
-        card.innerHTML = `
-          <div>
-            <span class="block text-sm text-gray-600">${dayName}, ${date}</span>
-            <h3 class="text-xl font-semibold text-gray-900 mt-1">${item.matkul}</h3>
-            
-            <div class="mt-4 grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-2 text-sm text-gray-700">
-              <!-- Detail Waktu -->
-              <div class="flex items-center gap-1.5">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 text-gray-400"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm.75-13a.75.75 0 00-1.5 0v5c0 .414.336.75.75.75h4a.75.75 0 000-1.5H10V5z" clip-rule="evenodd" /></svg>
-                ${item.jam} WIB
-              </div>
-              <!-- Detail Ruang -->
-              <div class="flex items-center gap-1.5">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 text-gray-400"><path fill-rule="evenodd" d="M9.69 18.233c.256.056.516.084.783.111a.75.75 0 00.233-1.482 11.455 11.455 0 00-.783-.11c-4.341-.96-7.387-4.6-7.387-9.006 0-5.03 4.123-9.13 9.183-9.13s9.183 4.1 9.183 9.13c0 4.406-3.046 8.046-7.387 9.006zM10 1.5a7.63 7.63 0 00-7.683 7.63c0 3.864 2.657 7.07 6.183 7.585a.75.75 0 00.233-1.482 6.155 6.155 0 01-4.918-6.103 6.183 6.183 0 1112.366 0c0 2.454-1.43 4.595-3.518 5.62a.75.75 0 10.598 1.348 7.683 7.683 0 005.01-7.01C17.683 5.63 14.16 1.5 10 1.5z" clip-rule="evenodd" /></svg>
-                Ruang: <span class="font-medium text-gray-900">${item.ruang}</span>
-              </div>
-              <!-- Detail Kursi -->
-              <div class="flex items-center gap-1.5">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 text-gray-400"><path d="M11.983 1.907a.75.75 0 00-1.966 0A11.19 11.19 0 013 5.234V5.75a.75.75 0 001.5 0V5.234a9.69 9.69 0 007.031-2.95.75.75 0 00-.548-.377zM12.25 4.5a.75.75 0 00-1.5 0v.234a9.69 9.69 0 007.031 2.95.75.75 0 00-.548.377A11.19 11.19 0 0113 5.234V4.5zM8.017 1.907a.75.75 0 00.548.377A9.69 9.69 0 001.5 5.234V5.75a.75.75 0 01-1.5 0V5.234A11.19 11.19 0 017 1.907a.75.75 0 001.017 0zM7.75 4.5a.75.75 0 011.5 0v.234A9.69 9.69 0 002.219 7.684a.75.75 0 11-.548-.377A11.19 11.19 0 017 4.5v-.234zM16 9.75a.75.75 0 01.75.75v5.034a1.12 1.12 0 01-.32 1.99 1.12 1.12 0 01-1.93-.001A1.12 1.12 0 0114.5 15.534V10.5a.75.75 0 01.75-.75zm-3 0a.75.75 0 01.75.75v5.034a1.12 1.12 0 01-.32 1.99 1.12 1.12 0 01-1.93-.001A1.12 1.12 0 0111.5 15.534V10.5a.75.75 0 01.75-.75zm-3 0a.75.75 0 01.75.75v5.034a1.12 1.12 0 01-.32 1.99 1.12 1.12 0 01-1.93-.001A1.12 1.12 0 018.5 15.534V10.5a.75.75 0 01.75-.75zm-3 0a.75.75 0 01.75.75v5.034a1.12 1.12 0 01-.32 1.99 1.12 1.12 0 01-1.93-.001A1.12 1.12 0 015.5 15.534V10.5a.75.75 0 01.75-.75z" /></svg>
-                Kursi: <span class="font-medium text-gray-900">${item.kursi}</span>
-              </div>
+        <!-- Kontrol Urutkan dan Ekspor -->
+        <div class="flex flex-col sm:flex-row justify-between items-center mb-4 gap-4 fade-in" style="animation-delay: 0.1s;">
+            <!-- Dropdown Urutkan -->
+            <div class="flex items-center gap-2">
+                <label for="sortOrder" class="text-sm font-medium text-gray-700">Urutkan:</label>
+                <select id="sortOrder" class="rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    <option value="date" selected>Tanggal Ujian (Terdekat)</option>
+                    <option value="alphabetical">Nama Mata Kuliah (A-Z)</option>
+                </select>
             </div>
-          </div>
-          
-          <!-- Tombol Aksi -->
-          <a href="${gcalLink}" target="_blank" rel="noopener noreferrer" class="w-full mt-2 flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white font-medium rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5"><path d="M15.75 2a.75.75 0 00-.75.75v1.5h-3v-1.5a.75.75 0 00-1.5 0v1.5H9v-1.5a.75.75 0 00-1.5 0v1.5H4.5v-1.5a.75.75 0 00-1.5 0v1.5A2.75 2.75 0 001.25 7v8.5A2.75 2.75 0 004 18.25h12a2.75 2.75 0 002.75-2.75V7A2.75 2.75 0 0016.25 4.25v-1.5A.75.75 0 0015.75 2zM1.25 10a.75.75 0 01.75-.75h16a.75.75 0 010 1.5h-16a.75.75 0 01-.75-.75zm.75 2.25a.75.75 0 000 1.5h.008a.75.75 0 000-1.5H2zm2.25.75a.75.75 0 01.75-.75h.008a.75.75 0 010 1.5H5a.75.75 0 01-.75-.75zM7.25 13a.75.75 0 000 1.5h.008a.75.75 0 000-1.5H7.25zM10 13.75a.75.75 0 01.75-.75h.008a.75.75 0 010 1.5H10.75a.75.75 0 01-.75-.75zm2.25.75a.75.75 0 000-1.5h.008a.75.75 0 000 1.5H12.25z" /></svg>
-            Tambah ke Kalender
-          </a>
-        `;
-        
-        scheduleList.appendChild(card);
-      });
-    }
+            <!-- Tombol Ekspor -->
+            <button id="exportAllButton" class="w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300 flex items-center justify-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414A2 2 0 0015.414 6L12 2.586A2 2 0 0010.586 2H6zm5 6a1 1 0 10-2 0v3.586l-1.293-1.293a1 1 0 10-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 11.586V8z" clip-rule="evenodd" />
+                </svg>
+                Ekspor Semua (.ics)
+            </button>
+        </div>
 
-    // --- FUNGSI HITUNG MUNDUR ---
-    let countdownInterval;
-    
-    function startCountdown() {
-      if (countdownInterval) clearInterval(countdownInterval);
-      updateCountdown(); // Jalankan sekali agar langsung tampil
-      countdownInterval = setInterval(updateCountdown, 1000); // Ulang setiap detik
-    }
-    
-    function findNextExam() {
-      const now = new Date();
-      const sortedExams = scheduleData.map(item => ({
-        ...item,
-        dateTime: parseDateString(item.tanggal, item.jam)
-      })).sort((a, b) => a.dateTime - b.dateTime);
+        <!-- Daftar Jadwal -->
+        <div id="scheduleList" class="space-y-4">
+            <!-- Kartu jadwal akan dimasukkan oleh JavaScript di sini -->
+        </div>
+    </div>
 
-      for (const exam of sortedExams) {
-        const examEnd = new Date(exam.dateTime.getTime() + (3 * 60 * 60 * 1000)); // Asumsi durasi 3 jam
-        if (examEnd > now) {
-          return exam; // Kembalikan ujian berikutnya atau yang sedang berlangsung
+    <script>
+        // --- DATA JADWAL (DIPERBARUI SESUAI GAMBAR) ---
+        // Data jadwal Ujian Tengah Semester
+        // Sumber: image_da33db.png
+        const scheduleData = [
+            { date: "2025-10-30", time: "08:30", subject: "Seminar Pemasaran Kreatif", room: "406", seat: "19", day: "Kamis" },
+            { date: "2025-11-04", time: "08:30", subject: "Metodologi Penelitian", room: "401", seat: "16", day: "Selasa" },
+            { date: "2025-10-27", time: "14:00", subject: "Manajemen Strategi", room: "401", seat: "25", day: "Senin" },
+            { date: "2025-10-31", time: "08:30", subject: "Penjenamaan atau Merek", room: "302", seat: "4", day: "Jumat" },
+            { date: "2025-10-30", time: "14:00", subject: "Tehnik Proyeksi Bisnis", room: "301", seat: "15", day: "Kamis" },
+            { date: "2025-10-28", time: "08:30", subject: "Etika Bisnis", room: "204", seat: "21", day: "Selasa" },
+            { date: "2025-11-05", time: "08:30", subject: "Manajemen Produk dan Harga", room: "301", seat: "12", day: "Rabu" }
+        ];
+
+        // --- ELEMEN DOM ---
+        const scheduleList = document.getElementById('scheduleList');
+        const sortOrderSelect = document.getElementById('sortOrder');
+        const exportAllButton = document.getElementById('exportAllButton');
+        const countdownBox = document.getElementById('countdownBox');
+        const nextExamSubject = document.getElementById('nextExamSubject');
+        const countdownTimer = document.getElementById('countdownTimer');
+        let countdownInterval;
+
+        // --- FUNGSI UTAMA ---
+
+        /**
+         * Mengisi daftar jadwal ke dalam HTML
+         */
+        function populateSchedule(sortBy = 'date') {
+            // Hapus daftar lama
+            scheduleList.innerHTML = '';
+
+            // Sortir data
+            const sortedData = sortData(scheduleData, sortBy);
+            
+            // Buat kartu HTML untuk setiap jadwal
+            sortedData.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = 'bg-white p-6 rounded-lg shadow-md border border-gray-200 fade-in';
+                card.style.animationDelay = `${index * 0.05}s`;
+
+                // Hitung tanggal dan waktu berakhir (asumsi durasi 2 jam)
+                const { gCalLink, startTime, endTime } = generateGCalLink(item);
+
+                card.innerHTML = `
+                    <div class="flex flex-col justify-between h-full gap-3">
+                        <div>
+                            <p class="text-sm font-medium text-blue-700">${item.day}, ${formatDate(item.date)}</p>
+                            <h2 class="text-xl font-bold text-gray-900 mt-1">${item.subject}</h2>
+                            <div class="flex flex-wrap gap-x-4 gap-y-2 text-gray-600 mt-3">
+                                <span class="flex items-center gap-1.5">
+                                    <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm.75-13a.75.75 0 00-1.5 0v5c0 .414.336.75.75.75h4a.75.75 0 000-1.5H10.75V5z" clip-rule="evenodd" /></svg>
+                                    ${item.time} WIB
+                                </span>
+                                <span class="flex items-center gap-1.5">
+                                    <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9.293 2.293a1 1 0 011.414 0l7 7A1 1 0 0117 10.414V17a1 1 0 01-1 1h-3a1 1 0 01-1-1v-3a1 1 0 00-1-1H9a1 1 0 00-1 1v3a1 1 0 01-1 1H4a1 1 0 01-1-1V10.414a1 1 0 01.293-.707l7-7z" clip-rule="evenodd" /></svg>
+                                    Ruang: ${item.room}
+                                </span>
+                                <span class="flex items-center gap-1.5">
+                                    <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M11.25 5.337c0-.355-.186-.676-.401-.959a.75.75 0 00-1.015-.099l-5.25 3.5a.75.75 0 000 1.222l5.25 3.5a.75.75 0 001.015-.099c.215-.283.401-.604.401-.959V12a1 1 0 112 0v.5A2.25 2.25 0 0110.5 15c-.463 0-.901-.14-.125-.389V5.772A2.215 2.215 0 0110.5 3 2.25 2.25 0 0112.75 5.25v.087c0 .355.186.676.401.959a.75.75 0 001.015.099l2.25-1.5a.75.75 0 000-1.222l-2.25-1.5a.75.75 0 00-1.015.099c-.215.283-.401.604-.401-.959V3a1 1 0 11-2 0v2.337z" /><path d="M5 6.25a.75.75 0 00-1.5 0v7.5a.75.75 0 001.5 0v-7.5z" /></svg>
+                                    Kursi: ${item.seat}
+                                </span>
+                            </div>
+                        </div>
+                        <a href="${gCalLink}" target="_blank" rel="noopener noreferrer" class="w-full bg-blue-700 hover:bg-blue-800 text-white font-semibold py-3 px-4 rounded-lg shadow-md transition duration-300 flex items-center justify-center gap-2 text-center">
+                            <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M5.25 3A2.25 2.25 0 003 5.25v9.5A2.25 2.25 0 005.25 17h9.5A2.25 2.25 0 0017 14.75V8.25A2.25 2.25 0 0014.75 6H12v2.25A2.25 2.25 0 019.75 10.5h-1.5A2.25 2.25 0 016 8.25V6H5.25zm3.75 3a.75.75 0 000 1.5h1.5a.75.75 0 000-1.5h-1.5z" /></svg>
+                            Tambah ke Kalender
+                        </a>
+                    </div>
+                `;
+                scheduleList.appendChild(card);
+            });
+
+            // Setelah mengisi jadwal, perbarui hitung mundur
+            updateCountdown();
         }
-      }
-      return null; // Semua ujian telah selesai
-    }
 
-    function updateCountdown() {
-      const nextExam = findNextExam();
-      const container = document.getElementById('countdown-container');
-      const subjectEl = document.getElementById('countdown-subject');
-      const timerEl = document.getElementById('countdown-timer');
-      const titleEl = document.getElementById('countdown-title');
-      
-      container.style.opacity = 1; // Tampilkan boks
-      
-      if (!nextExam) {
-        container.classList.add('finished');
-        titleEl.textContent = 'Semua Ujian Selesai!';
-        subjectEl.textContent = 'Selamat!';
-        timerEl.textContent = 'Anda berhasil menyelesaikan semester ini.';
-        clearInterval(countdownInterval);
-        return;
-      }
-
-      const now = new Date().getTime();
-      const examTime = nextExam.dateTime.getTime();
-      const distance = examTime - now;
-
-      if (distance > 0) {
-        // Ujian Belum Mulai (Hitung Mundur)
-        container.classList.remove('live', 'finished');
-        titleEl.textContent = 'Ujian Berikutnya:';
-        subjectEl.textContent = nextExam.matkul;
-        
-        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-        
-        timerEl.textContent = `${days} hari, ${hours} jam, ${minutes} menit, ${seconds} detik`;
-      } else {
-        // Ujian Sedang Berlangsung (Asumsi durasi 3 jam)
-        const examEnd = examTime + (3 * 60 * 60 * 1000);
-        if (now < examEnd) {
-          container.classList.add('live');
-          container.classList.remove('finished');
-          titleEl.textContent = 'Sedang Berlangsung!';
-          subjectEl.textContent = nextExam.matkul;
-          timerEl.textContent = `Ujian berlangsung hingga ${formatTime(new Date(examEnd))}`;
-        } else {
-          // Ujian ini baru saja selesai, cari berikutnya (seharusnya ditangani oleh findNextExam, tapi sebagai fallback)
-          timerEl.textContent = "Mencari ujian berikutnya...";
+        /**
+         * Memformat tanggal (YYYY-MM-DD) menjadi format (DD MMMM YYYY)
+         */
+        function formatDate(dateString) {
+            const [year, month, day] = dateString.split('-').map(Number);
+            const date = new Date(year, month - 1, day);
+            return date.toLocaleDateString('id-ID', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric'
+            });
         }
-      }
-    }
 
-    // --- FUNGSI UTILITAS WAKTU ---
-    
-    // Parse "DD-MM-YYYY" dan "HH:MM" ke objek Date
-    function parseDateString(dateStr, timeStr) {
-      const [day, month, year] = dateStr.split('-').map(Number);
-      const [hours, minutes] = timeStr.split(':').map(Number);
-      // Bulan di JS adalah 0-indexed (Jan=0, Feb=1, ...), jadi kurangi 1
-      return new Date(year, month - 1, day, hours, minutes);
-    }
-    
-    // Format objek Date ke "NamaHari, DD NamaBulan YYYY"
-    function formatDateTime(date) {
-      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-      const formattedDate = date.toLocaleDateString('id-ID', options);
-      return {
-        dayName: formattedDate.split(',')[0],
-        date: formattedDate.split(',')[1].trim()
-      };
-    }
-    
-    // Format objek Date ke "HH:MM"
-    function formatTime(date) {
-      return date.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', hour12: false });
-    }
+        /**
+         * Mengurutkan data
+         */
+        function sortData(data, sortBy) {
+            // Salin data agar tidak mengubah data aslinya
+            const dataToSort = [...data];
 
-    // Format objek Date ke "YYYYMMDDTHHMMSS" untuk Google Calendar & ICS
-    function formatISO(date, isAllDay = false) {
-      if (isAllDay) {
-        return date.toISOString().slice(0, 10).replace(/-/g, '');
-      }
-      // Mengembalikan waktu dalam UTC (diakhiri 'Z')
-      return date.toISOString().replace(/-/g, '').replace(/:/g, '').slice(0, 15) + 'Z';
-    }
+            if (sortBy === 'date') {
+                return dataToSort.sort((a, b) => {
+                    const dateTimeA = new Date(`${a.date}T${a.time}`);
+                    const dateTimeB = new Date(`${b.date}T${b.time}`);
+                    return dateTimeA - dateTimeB;
+                });
+            } else if (sortBy === 'alphabetical') {
+                return dataToSort.sort((a, b) => a.subject.localeCompare(b.subject));
+            }
+            return dataToSort;
+        }
 
-    // --- FUNGSI KALENDER ---
+        /**
+         * Membuat link Google Calendar
+         */
+        function generateGCalLink(item, durationHours = 2) {
+            const startTime = new Date(`${item.date}T${item.time}:00+07:00`); // Asumsi WIB (GMT+7)
+            const endTime = new Date(startTime.getTime() + durationHours * 60 * 60 * 1000);
 
-    // Buat link Google Calendar
-    function createGoogleCalendarLink(item) {
-      const startTime = item.dateTime;
-      // Asumsi durasi ujian 3 jam
-      const endTime = new Date(startTime.getTime() + (3 * 60 * 60 * 1000));
-      
-      const details = `Mata Kuliah: ${item.matkul}\nKelas: ${item.kelas}\nRuang: ${item.ruang}\nKursi: ${item.kursi}\nSKS: ${item.sks}`;
-      
-      // Google Calendar menggunakan format YYYYMMDDTHHMMSS/YYYYMMDDTHHMMSS
-      // dan mengharapkan waktu lokal (tanpa Z) jika ctz (timezone) disediakan.
-      
-      // Fungsi untuk format YYYYMMDDTHHMMSS (Lokal, non-UTC)
-      const formatLocalISO = (dt) => {
-          const pad = (num) => num.toString().padStart(2, '0');
-          return `${dt.getFullYear()}${pad(dt.getMonth() + 1)}${pad(dt.getDate())}` +
-                 `T${pad(dt.getHours())}${pad(dt.getMinutes())}${pad(dt.getSeconds())}`;
-      };
+            // Format YYYYMMDDTHHMMSSZ
+            const formatGCalTime = (date) => date.toISOString().replace(/-|:|\.\d+/g, '');
 
-      const startTimeISO = formatLocalISO(startTime);
-      const endTimeISO = formatLocalISO(endTime);
-      
-      const params = new URLSearchParams({
-        action: 'TEMPLATE',
-        text: `UTS: ${item.matkul}`,
-        dates: `${startTimeISO}/${endTimeISO}`,
-        details: details,
-        location: `Ruang ${item.ruang}`,
-        ctz: 'Asia/Jakarta' // Timezone
-      });
-      
-      return `https://www.google.com/calendar/render?${params.toString()}`;
-    }
+            const gCalDetails = {
+                text: `UTS: ${item.subject}`,
+                dates: `${formatGCalTime(startTime)}/${formatGCalTime(endTime)}`,
+                details: `Ujian Tengah Semester: ${item.subject}\nRuang: ${item.room}\nKursi: ${item.seat}`,
+                location: `Ruang ${item.room}, Kampus`,
+                ctz: 'Asia/Jakarta'
+            };
 
-    // Buat dan unduh file .ics
-    function generateICSFile() {
-      let icsContent = [
-        'BEGIN:VCALENDAR',
-        'VERSION:2.0',
-        'PRODID:-//Gemini//Jadwal UTS Meliana//ID',
-        'CALSCALE:GREGORIAN'
-      ];
-      
-      const sortedData = [...scheduleData].map(item => ({
-        ...item,
-        dateTime: parseDateString(item.tanggal, item.jam)
-      })).sort((a, b) => a.dateTime - b.dateTime);
+            const gCalLink = `https://www.google.com/calendar/render?action=TEMPLATE&${new URLSearchParams(gCalDetails)}`;
+            
+            return { gCalLink, startTime, endTime };
+        }
 
-      // Format ISO (UTC) untuk file ICS
-      const formatICSIso = (date) => {
-        return date.toISOString().replace(/-/g, '').replace(/:/g, '').slice(0, 15) + 'Z';
-      }
-      
-      sortedData.forEach(item => {
-        const startTime = item.dateTime;
-        const endTime = new Date(startTime.getTime() + (3 * 60 * 60 * 1000)); // Durasi 3 jam
-        const uid = `${formatICSIso(startTime)}-${item.matkul.replace(/\s+/g, '')}@jadwaluts.meliana`;
-        
-        // Catatan: ICS standar menggunakan waktu UTC (Z)
-        // Atau bisa menggunakan TZID jika VTIMEZONE didefinisikan, tapi UTC lebih aman.
-        icsContent.push(
-          'BEGIN:VEVENT',
-          `DTSTAMP:${formatICSIso(new Date())}`,
-          `UID:${uid}`,
-          `DTSTART:${formatICSIso(startTime)}`,
-          `DTEND:${formatICSIso(endTime)}`,
-          `SUMMARY:UTS: ${item.matkul}`,
-          `LOCATION:Ruang ${item.ruang}`,
-          `DESCRIPTION:Mata Kuliah: ${item.matkul}\\nKelas: ${item.kelas}\\nRuang: ${item.ruang}\\nKursi: ${item.kursi}\\nSKS: ${item.sks}`,
-          'END:VEVENT'
-        );
-      });
-      
-      icsContent.push('END:VCALENDAR');
-      
-      // Buat dan unduh file
-      const blob = new Blob([icsContent.join('\r\n')], { type: 'text/calendar;charset=utf-8' });
-      const link = document.createElement('a');
-      link.href = URL.createObjectURL(blob);
-      link.download = 'jadwal_uts_meliana.ics';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    }
-  </script>
-  
-  <!--
-  ================================================================
-  SCRIPT REGISTRASI SERVICE WORKER (PWA)
-  ================================================================
-  -->
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('sw.js')
-          .then(reg => {
-            console.log('Service Worker terdaftar:', reg.scope);
-          })
-          .catch(err => {
-            console.error('Pendaftaran Service Worker gagal:', err);
-          });
-      });
-    }
-  </script>
+        // --- FITUR HITUNG MUNDUR ---
+
+        /**
+         * Mencari ujian berikutnya
+         */
+        function findNextExam() {
+            const now = new Date();
+            const sortedByDate = sortData(scheduleData, 'date');
+            
+            for (const item of sortedByDate) {
+                const { endTime } = generateGCalLink(item);
+                if (endTime > now) {
+                    // Ini adalah ujian berikutnya atau yang sedang berlangsung
+                    return item;
+                }
+            }
+            return null; // Semua ujian telah selesai
+        }
+
+        /**
+         * Memperbarui UI hitung mundur
+         */
+        function updateCountdown() {
+            if (countdownInterval) {
+                clearInterval(countdownInterval);
+            }
+
+            const nextExam = findNextExam();
+            if (!nextExam) {
+                countdownBox.classList.remove('hidden');
+                nextExamSubject.textContent = "Semua Ujian Telah Selesai!";
+                countdownTimer.textContent = "Selamat! 🎉";
+                return;
+            }
+
+            countdownBox.classList.remove('hidden');
+            nextExamSubject.textContent = nextExam.subject;
+
+            countdownInterval = setInterval(() => {
+                const now = new Date();
+                const { startTime, endTime } = generateGCalLink(nextExam);
+
+                if (now < startTime) {
+                    // Hitung mundur menuju ujian
+                    const diff = startTime - now;
+                    const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+                    const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                    const s = Math.floor((diff % (1000 * 60)) / 1000);
+                    countdownTimer.textContent = `${d} hari ${h} jam ${m} mnt ${s} dtk`;
+                } else if (now >= startTime && now < endTime) {
+                    // Ujian sedang berlangsung
+                    countdownTimer.textContent = "Sedang Berlangsung!";
+                } else {
+                    // Ujian ini baru saja selesai, cari berikutnya
+                    clearInterval(countdownInterval);
+                    updateCountdown(); // Rekursif untuk mencari ujian berikutnya
+                }
+            }, 1000);
+        }
+
+        // --- FITUR EKSPOR .ICS ---
+
+        /**
+         * Membuat dan mengunduh file .ics
+         */
+        function generateICSFile() {
+            let icsContent = [
+                'BEGIN:VCALENDAR',
+                'VERSION:2.0',
+                'PRODID:-//JadwalUTS//Meliana Gita Puspitasari//ID'
+            ];
+
+            const dataToExport = sortData(scheduleData, 'date');
+
+            dataToExport.forEach(item => {
+                const { startTime, endTime } = generateGCalLink(item);
+                
+                // Format YYYYMMDDTHHMMSS
+                const formatICSTime = (date) => date.toISOString().replace(/-|:|\.\d+/g, '').slice(0, 15);
+
+                const uid = `${formatICSTime(startTime)}-${item.subject.replace(/ /g, '')}@jadwal.uts`;
+
+                icsContent.push(
+                    'BEGIN:VEVENT',
+                    `UID:${uid}`,
+                    `DTSTAMP:${formatICSTime(new Date())}`,
+                    `DTSTART;TZID=Asia/Jakarta:${formatICSTime(startTime)}`,
+                    `DTEND;TZID=Asia/Jakarta:${formatICSTime(endTime)}`,
+                    `SUMMARY:UTS: ${item.subject}`,
+                    `DESCRIPTION:Ujian Tengah Semester: ${item.subject}\\nRuang: ${item.room}\\nKursi: ${item.seat}`,
+                    `LOCATION:Ruang ${item.room}, Kampus`,
+                    'END:VEVENT'
+                );
+            });
+
+            icsContent.push('END:VCALENDAR');
+
+            // Buat file dan trigger download
+            const blob = new Blob([icsContent.join('\r\n')], { type: 'text/calendar' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'Jadwal_UTS_Meliana.ics';
+            link.click();
+            URL.revokeObjectURL(link.href);
+        }
+
+        // --- EVENT LISTENERS ---
+
+        // Saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', () => {
+            populateSchedule('date'); // Urutkan berdasarkan tanggal saat pertama dimuat
+        });
+
+        // Saat pilihan urutan diubah
+        sortOrderSelect.addEventListener('change', (e) => {
+            populateSchedule(e.target.value);
+        });
+
+        // Saat tombol ekspor diklik
+        exportAllButton.addEventListener('click', generateICSFile);
+
+        // --- PWA Service Worker ---
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then(registration => {
+                        console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                    })
+                    .catch(err => {
+                        console.log('ServiceWorker registration failed: ', err);
+                    });
+            });
+        }
+
+    </script>
 </body>
 </html>
 
