@@ -1,0 +1,377 @@
+/* ---------------------------------- */
+/* IMPOR FONT & DASAR         */
+/* ---------------------------------- */
+
+/* Impor Font Inter */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+/* Aturan dasar untuk body */
+.page-body {
+  font-family: 'Inter', sans-serif;
+  background-color: #f3f4f6; /* bg-gray-100 */
+  color: #111827; /* text-gray-900 */
+  padding: 1rem; /* p-4 */
+}
+
+/* Responsif untuk padding body */
+@media (min-width: 640px) {
+  .page-body {
+    padding: 2rem; /* sm:p-8 */
+  }
+}
+
+/* ---------------------------------- */
+/* KARTU UTAMA & HEADER        */
+/* ---------------------------------- */
+
+.main-card {
+  width: 100%;
+  background-color: #ffffff; /* bg-white */
+  border-radius: 1rem; /* rounded-2xl */
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-lg */
+  overflow: hidden; /* overflow-hidden */
+}
+
+.card-header {
+  background-color: #1e40af; /* bg-blue-800 */
+  color: #ffffff; /* text-white */
+  padding: 1.5rem; /* p-6 */
+}
+
+.header-title {
+  font-size: 1.5rem; /* text-2xl */
+  line-height: 2rem;
+  font-weight: 700; /* font-bold */
+}
+
+.header-subtitle {
+  font-size: 1.125rem; /* text-lg */
+  line-height: 1.75rem;
+  color: #bfdbfe; /* text-blue-200 */
+  margin-top: 0.25rem; /* mt-1 */
+}
+
+/* Responsif untuk header */
+@media (min-width: 768px) {
+  .card-header {
+    padding: 2rem; /* md:p-8 */
+  }
+  .header-title {
+    font-size: 1.875rem; /* md:text-3xl */
+    line-height: 2.25rem;
+  }
+  .header-subtitle {
+    font-size: 1.25rem; /* md:text-xl */
+    line-height: 1.75rem;
+  }
+}
+
+/* ---------------------------------- */
+/* KONTEN UTAMA (MAIN)        */
+/* ---------------------------------- */
+
+.card-body {
+  padding: 1.5rem; /* p-6 */
+}
+
+@media (min-width: 768px) {
+  .card-body {
+    padding: 2rem; /* md:p-8 */
+  }
+}
+
+/* ---------------------------------- */
+/* BOKS HITUNG MUNDUR         */
+/* ---------------------------------- */
+
+.countdown-box {
+  margin-bottom: 1.5rem; /* mb-6 */
+  padding: 1.25rem; /* p-5 */
+  background-color: #eff6ff; /* bg-blue-50 */
+  border-left: 4px solid #2563eb; /* border-l-4 border-blue-600 */
+  border-radius: 0.5rem; /* rounded-lg */
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* shadow-md */
+  transition-property: all; /* transition-all */
+  transition-duration: 300ms; /* duration-300 */
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); /* ease-in-out */
+  opacity: 0; /* Digunakan oleh 'fade-in' */
+}
+
+.countdown-title {
+  font-size: 1.125rem; /* text-lg */
+  line-height: 1.75rem;
+  font-weight: 600; /* font-semibold */
+  color: #1e3a8a; /* text-blue-900 */
+}
+
+.countdown-subject {
+  font-size: 1.5rem; /* text-2xl */
+  line-height: 2rem;
+  font-weight: 700; /* font-bold */
+  color: #1d4ed8; /* text-blue-700 */
+  margin-top: 0.25rem; /* mt-1 */
+}
+
+.countdown-timer {
+  font-size: 1.25rem; /* text-xl */
+  line-height: 1.75rem;
+  font-weight: 500; /* font-medium */
+  color: #1e40af; /* text-blue-800 */
+  margin-top: 0.5rem; /* mt-2 */
+}
+
+/* Status: Sedang Berlangsung (Live) */
+.countdown-box.live {
+  background-color: #fef2f2; /* bg-red-50 */
+  border-left-color: #dc2626; /* border-red-600 */
+  animation: pulse-live 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+.countdown-box.live .countdown-title { color: #7f1d1d; /* text-red-900 */ }
+.countdown-box.live .countdown-subject { color: #b91c1c; /* text-red-700 */ }
+.countdown-box.live .countdown-timer { color: #991b1b; /* text-red-800 */ }
+
+/* Status: Selesai (Finished) */
+.countdown-box.finished {
+  background-color: #f0fdf4; /* bg-green-50 */
+  border-left-color: #16a34a; /* border-green-600 */
+}
+.countdown-box.finished .countdown-title { color: #14532d; /* text-green-900 */ }
+.countdown-box.finished .countdown-subject { color: #15803d; /* text-green-700 */ }
+.countdown-box.finished .countdown-timer { color: #166534; /* text-green-800 */ }
+
+
+/* ---------------------------------- */
+/* KONTROL & TOMBOL           */
+/* ---------------------------------- */
+
+.controls {
+  display: flex;
+  flex-direction: column; /* flex-col */
+  margin-bottom: 1.5rem; /* mb-6 */
+  gap: 1rem; /* gap-4 */
+}
+
+.sort-control {
+  display: flex;
+  align-items: center; /* items-center */
+  gap: 0.75rem; /* gap-3 */
+}
+
+.sort-label {
+  font-size: 0.875rem; /* text-sm */
+  line-height: 1.25rem;
+  font-weight: 500; /* font-medium */
+  color: #374151; /* text-gray-700 */
+}
+
+.sort-select {
+  display: block;
+  width: 100%; /* w-full */
+  padding-left: 0.75rem; /* pl-3 */
+  padding-right: 2.5rem; /* pr-10 */
+  padding-top: 0.5rem; /* py-2 */
+  padding-bottom: 0.5rem; /* py-2 */
+  font-size: 1rem; /* text-base */
+  border: 1px solid #d1d5db; /* border-gray-300 */
+  border-radius: 0.375rem; /* rounded-md */
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* shadow-sm */
+  /* Menghilangkan tampilan default & menambah panah kustom */
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+  background-position: right 0.5rem center;
+  background-repeat: no-repeat;
+  background-size: 1.5em 1.5em;
+}
+
+.sort-select:focus {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px #3b82f6; /* focus:ring-blue-500 */
+  border-color: #3b82f6; /* focus:border-blue-500 */
+}
+
+/* Tombol generik */
+.btn {
+  width: 100%; /* w-full */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem; /* px-4 py-2 */
+  border: 1px solid transparent; /* border border-transparent */
+  font-size: 0.875rem; /* text-sm */
+  line-height: 1.25rem;
+  font-weight: 500; /* font-medium */
+  border-radius: 0.375rem; /* rounded-md */
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* shadow-sm */
+  color: #ffffff; /* text-white */
+  transition-property: background-color; /* transition-colors */
+  transition-duration: 150ms;
+  cursor: pointer;
+  text-decoration: none; /* Untuk tag <a> */
+}
+
+.btn:focus {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+.btn .btn-icon {
+  height: 1.25rem; /* h-5 */
+  width: 1.25rem; /* w-5 */
+  margin-right: 0.5rem; /* mr-2 */
+}
+
+/* Tombol Ekspor (Hijau) */
+.btn-export {
+  background-color: #16a34a; /* bg-green-600 */
+}
+.btn-export:hover {
+  background-color: #15803d; /* hover:bg-green-700 */
+}
+.btn-export:focus {
+  box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #22c55e; /* focus:ring-2 focus:ring-offset-2 focus:ring-green-500 */
+}
+
+/* Tombol Google Calendar (Biru) */
+.btn-gcal {
+  background-color: #2563eb; /* bg-blue-600 */
+}
+.btn-gcal:hover {
+  background-color: #1d4ed8; /* hover:bg-blue-700 */
+}
+.btn-gcal:focus {
+  box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #3b82f6; /* focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 */
+}
+
+/* Responsif untuk kontrol & tombol */
+@media (min-width: 640px) {
+  .controls {
+    flex-direction: row; /* sm:flex-row */
+    align-items: center; /* sm:items-center */
+    justify-content: space-between; /* sm:justify-between */
+  }
+  .sort-select {
+    width: auto; /* sm:w-auto */
+  }
+  .btn {
+    width: auto; /* sm:w-auto */
+  }
+}
+
+/* ---------------------------------- */
+/* DAFTAR & KARTU JADWAL      */
+/* ---------------------------------- */
+
+.schedule-list > * + * {
+  margin-top: 1rem; /* space-y-4 */
+}
+
+.schedule-card {
+  background-color: #ffffff; /* bg-white */
+  padding: 1.25rem; /* p-5 */
+  border-radius: 0.5rem; /* rounded-lg */
+  border: 1px solid #e5e7eb; /* border border-gray-200 */
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* shadow-sm */
+  display: flex;
+  flex-direction: column; /* flex-col */
+  gap: 1rem; /* gap-4 */
+  opacity: 0; /* Digunakan oleh 'fade-in' */
+}
+
+.card-info {
+  flex: 1 1 0%; /* flex-1 */
+}
+
+.card-date {
+  display: block;
+  font-size: 0.875rem; /* text-sm */
+  line-height: 1.25rem;
+  font-weight: 500; /* font-medium */
+  color: #6b7280; /* text-gray-500 */
+}
+
+.card-subject {
+  font-size: 1.25rem; /* text-xl */
+  line-height: 1.75rem;
+  font-weight: 600; /* font-semibold */
+  color: #111827; /* text-gray-900 */
+  margin-top: 0.25rem; /* mt-1 */
+}
+
+.card-details {
+  display: flex;
+  flex-wrap: wrap; /* flex-wrap */
+  gap: 0.25rem 1rem; /* gap-y-1 gap-x-4 */
+  font-size: 0.875rem; /* text-sm */
+  line-height: 1.25rem;
+  color: #374151; /* text-gray-700 */
+  margin-top: 0.5rem; /* mt-2 */
+}
+
+.detail-item {
+  display: flex;
+  align-items: center;
+}
+
+.detail-icon {
+  height: 1rem; /* h-4 */
+  width: 1rem; /* w-4 */
+  margin-right: 0.375rem; /* mr-1.5 */
+  color: #9ca3af; /* text-gray-400 */
+}
+
+.detail-item span.font-medium {
+  font-weight: 500; /* font-medium */
+  margin-left: 0.25rem; /* ml-1 */
+}
+
+.card-action {
+  flex-shrink: 0; /* flex-shrink-0 */
+}
+
+/* Responsif untuk kartu jadwal */
+@media (min-width: 640px) {
+  .schedule-card {
+    flex-direction: row; /* sm:flex-row */
+    align-items: center; /* sm:items-center */
+    justify-content: space-between; /* sm:justify-between */
+  }
+  .card-action {
+    width: auto; /* sm:w-auto */
+  }
+}
+
+/* ---------------------------------- */
+/* FOOTER                */
+/* ---------------------------------- */
+
+.page-footer {
+  text-align: center; /* text-center */
+  margin-top: 1.5rem; /* mt-6 */
+  color: #6b7280; /* text-gray-500 */
+  font-size: 0.875rem; /* text-sm */
+  line-height: 1.25rem;
+}
+
+/* ---------------------------------- */
+/* ANIMASI KUSTOM            */
+/* ---------------------------------- */
+
+/* Animasi fade-in untuk memuat kartu */
+.fade-in {
+  animation: fade-in 0.5s ease-out forwards;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Animasi pulse untuk ujian live */
+@keyframes pulse-live {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .7; }
+}
+
