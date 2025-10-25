@@ -1,36 +1,21 @@
 {
   "name": "Jadwal UTS (Meliana)",
   "short_name": "JadwalUTS",
-  "description": "Aplikasi PWA untuk melihat jadwal UTS dan menambahkannya ke kalender.",
-  "start_url": "/",
+  "start_url": ".",
   "display": "standalone",
   "background_color": "#f3f4f6",
   "theme_color": "#1e40af",
-  "orientation": "portrait-primary",
+  "description": "Aplikasi web untuk melihat jadwal UTS.",
   "icons": [
     {
       "src": "https://placehold.co/192x192/1e40af/ffffff?text=UTS",
-      "type": "image/png",
       "sizes": "192x192",
-      "purpose": "any"
+      "type": "image/png"
     },
     {
       "src": "https://placehold.co/512x512/1e40af/ffffff?text=UTS",
-      "type": "image/png",
       "sizes": "512x512",
-      "purpose": "any"
-    },
-    {
-      "src": "https://placehold.co/192x192/1e40af/ffffff?text=UTS",
-      "type": "image/png",
-      "sizes": "192x192",
-      "purpose": "maskable"
-    },
-    {
-      "src": "https://placehold.co/512x512/1e40af/ffffff?text=UTS",
-      "type": "image/png",
-      "sizes": "512x512",
-      "purpose": "maskable"
+      "type": "image/png"
     }
   ]
 }
