@@ -9,10 +9,10 @@
     
     <!-- Konfigurasi PWA -->
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#1e40af">
+    <meta name="theme-color" content="#4338ca"> <!-- Indigo-700 -->
     
     <!-- Ikon Apple Touch -->
-    <link rel="apple-touch-icon" href="https://placehold.co/192x192/1e40af/ffffff?text=UTS">
+    <link rel="apple-touch-icon" href="https://placehold.co/192x192/4338ca/ffffff?text=UTS">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,6 +21,8 @@
         /* Menggunakan font Inter sebagai default */
         body {
             font-family: 'Inter', sans-serif;
+            /* Latar belakang gradien halus */
+            background-color: #f8fafc; /* slate-50 */
         }
         /* Animasi fade-in */
         @keyframes fadeIn {
@@ -32,21 +34,49 @@
         }
         /* Style untuk hitung mundur */
         .countdown-box {
-            background: linear-gradient(135deg, #2563eb, #1e40af);
+            /* Gradien baru yang lebih modern */
+            background: linear-gradient(135deg, #4f46e5, #3730a3); /* Indigo-600 ke Indigo-800 */
             animation: fadeIn 0.5s ease-out;
         }
-        /* Menghilangkan panah di input number */
-        input[type=number]::-webkit-inner-spin-button,
-        input[type=number]::-webkit-outer-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
+        /* Style untuk bilah warna harian */
+        .day-bar {
+            width: 6px;
+            height: 100%;
+            position: absolute;
+            left: 0;
+            top: 0;
+            border-top-left-radius: 0.75rem; /* rounded-xl */
+            border-bottom-left-radius: 0.75rem; /* rounded-xl */
         }
-        input[type=number] {
-            -moz-appearance: textfield;
+        /* Palet warna untuk hari */
+        .day-senin { background-color: #ef4444; } /* red-500 */
+        .day-selasa { background-color: #3b82f6; } /* blue-500 */
+        .day-rabu { background-color: #10b981; } /* emerald-500 */
+        .day-kamis { background-color: #eab308; } /* yellow-500 */
+        .day-jumat { background-color: #8b5cf6; } /* violet-500 */
+        
+        /* Transisi untuk hover dan klik */
+        .btn-animated {
+            transition: all 0.2s ease-in-out;
+        }
+        .btn-animated:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.05);
+        }
+        .btn-animated:active {
+            transform: translateY(-1px) scale(0.98);
+        }
+        
+        .card-animated {
+            transition: all 0.2s ease-in-out;
+        }
+        .card-animated:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.07), 0 4px 6px -4px rgb(0 0 0 / 0.07);
         }
     </style>
 </head>
-<body class="bg-gray-100 p-4 sm:p-8">
+<body class="bg-slate-50 p-4 sm:p-8">
 
     <div class="w-full max-w-4xl mx-auto">
         <!-- Header -->
@@ -56,8 +86,8 @@
         </header>
 
         <!-- Boks Hitung Mundur -->
-        <div id="countdownBox" class="countdown-box text-white p-5 rounded-lg shadow-lg mb-6 hidden">
-            <h2 class="text-lg font-semibold">Ujian Berikutnya:</h2>
+        <div id="countdownBox" class="countdown-box text-white p-5 rounded-xl shadow-lg mb-6 hidden">
+            <h2 class="text-lg font-semibold opacity-90">Ujian Berikutnya:</h2>
             <p id="nextExamSubject" class="text-2xl font-bold"></p>
             <p id="countdownTimer" class="text-xl mt-1"></p>
         </div>
@@ -65,15 +95,15 @@
         <!-- Kontrol Urutkan dan Ekspor -->
         <div class="flex flex-col sm:flex-row justify-between items-center mb-4 gap-4 fade-in" style="animation-delay: 0.1s;">
             <!-- Dropdown Urutkan -->
-            <div class="flex items-center gap-2">
+            <div class="flex items-center gap-2 w-full sm:w-auto">
                 <label for="sortOrder" class="text-sm font-medium text-gray-700">Urutkan:</label>
-                <select id="sortOrder" class="rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                <select id="sortOrder" class="w-full sm:w-auto rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 transition duration-150">
                     <option value="date" selected>Tanggal Ujian (Terdekat)</option>
                     <option value="alphabetical">Nama Mata Kuliah (A-Z)</option>
                 </select>
             </div>
             <!-- Tombol Ekspor -->
-            <button id="exportAllButton" class="w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300 flex items-center justify-center gap-2">
+            <button id="exportAllButton" class="w-full sm:w-auto bg-teal-600 hover:bg-teal-700 text-white font-semibold py-2 px-5 rounded-lg shadow-md btn-animated flex items-center justify-center gap-2">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                     <path fill-rule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414A2 2 0 0015.414 6L12 2.586A2 2 0 0010.586 2H6zm5 6a1 1 0 10-2 0v3.586l-1.293-1.293a1 1 0 10-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 11.586V8z" clip-rule="evenodd" />
                 </svg>
@@ -82,24 +112,46 @@
         </div>
 
         <!-- Daftar Jadwal -->
-        <div id="scheduleList" class="space-y-4">
+        <div id="scheduleList" class="space-y-5">
             <!-- Kartu jadwal akan dimasukkan oleh JavaScript di sini -->
         </div>
     </div>
 
     <script>
         // --- DATA JADWAL (DIPERBARUI SESUAI GAMBAR) ---
-        // Data jadwal Ujian Tengah Semester
-        // Sumber: image_da33db.png
         const scheduleData = [
-            { date: "2025-10-30", time: "08:30", subject: "Seminar Pemasaran Kreatif", room: "406", seat: "19", day: "Kamis" },
-            { date: "2025-11-04", time: "08:30", subject: "Metodologi Penelitian", room: "401", seat: "16", day: "Selasa" },
-            { date: "2025-10-27", time: "14:00", subject: "Manajemen Strategi", room: "401", seat: "25", day: "Senin" },
-            { date: "2025-10-31", time: "08:30", subject: "Penjenamaan atau Merek", room: "302", seat: "4", day: "Jumat" },
-            { date: "2025-10-30", time: "14:00", subject: "Tehnik Proyeksi Bisnis", room: "301", seat: "15", day: "Kamis" },
-            { date: "2025-10-28", time: "08:30", subject: "Etika Bisnis", room: "204", seat: "21", day: "Selasa" },
-            { date: "2025-11-05", time: "08:30", subject: "Manajemen Produk dan Harga", room: "301", seat: "12", day: "Rabu" }
+            { id: "MKT301", date: "2025-10-30", time: "08:30", subject: "Seminar Pemasaran Kreatif", room: "406", seat: "19", day: "Kamis" },
+            { id: "RES302", date: "2025-11-04", time: "08:30", subject: "Metodologi Penelitian", room: "401", seat: "16", day: "Selasa" },
+            { id: "MAN401", date: "2025-10-27", time: "14:00", subject: "Manajemen Strategi", room: "401", seat: "25", day: "Senin" },
+            { id: "BRD402", date: "2025-10-31", time: "08:30", subject: "Penjenamaan atau Merek", room: "302", seat: "4", day: "Jumat" },
+            { id: "BUS201", date: "2025-10-30", time: "14:00", subject: "Tehnik Proyeksi Bisnis", room: "301", seat: "15", day: "Kamis" },
+            { id: "ETH202", date: "2025-10-28", time: "08:30", subject: "Etika Bisnis", room: "204", seat: "21", day: "Selasa" },
+            { id: "MAN303", date: "2025-11-05", time: "08:30", subject: "Manajemen Produk dan Harga", room: "301", seat: "12", day: "Rabu" }
         ];
+
+        // --- STATE APLIKASI ---
+        // Mencoba memuat status selesai dari localStorage
+        let completedExams = {};
+        try {
+            const storedCompleted = localStorage.getItem('completedExams');
+            if (storedCompleted) {
+                completedExams = JSON.parse(storedCompleted);
+            }
+        } catch (e) {
+            console.error("Gagal memuat localStorage:", e);
+            completedExams = {};
+        }
+
+        /**
+         * Menyimpan status selesai ke localStorage
+         */
+        function saveCompletedStatus() {
+            try {
+                localStorage.setItem('completedExams', JSON.stringify(completedExams));
+            } catch (e) {
+                console.error("Gagal menyimpan ke localStorage:", e);
+            }
+        }
 
         // --- ELEMEN DOM ---
         const scheduleList = document.getElementById('scheduleList');
@@ -116,52 +168,116 @@
          * Mengisi daftar jadwal ke dalam HTML
          */
         function populateSchedule(sortBy = 'date') {
-            // Hapus daftar lama
             scheduleList.innerHTML = '';
-
-            // Sortir data
             const sortedData = sortData(scheduleData, sortBy);
             
-            // Buat kartu HTML untuk setiap jadwal
             sortedData.forEach((item, index) => {
+                const isCompleted = completedExams[item.id] || false;
+                const { gCalLink } = generateGCalLink(item);
+
                 const card = document.createElement('div');
-                card.className = 'bg-white p-6 rounded-lg shadow-md border border-gray-200 fade-in';
+                card.className = `relative bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden card-animated fade-in ${isCompleted ? 'opacity-60' : ''}`;
                 card.style.animationDelay = `${index * 0.05}s`;
 
-                // Hitung tanggal dan waktu berakhir (asumsi durasi 2 jam)
-                const { gCalLink, startTime, endTime } = generateGCalLink(item);
+                // Tentukan warna bilah hari
+                let dayColorClass = 'day-senin'; // default
+                if (item.day === 'Selasa') dayColorClass = 'day-selasa';
+                else if (item.day === 'Rabu') dayColorClass = 'day-rabu';
+                else if (item.day === 'Kamis') dayColorClass = 'day-kamis';
+                else if (item.day === 'Jumat') dayColorClass = 'day-jumat';
 
                 card.innerHTML = `
-                    <div class="flex flex-col justify-between h-full gap-3">
-                        <div>
-                            <p class="text-sm font-medium text-blue-700">${item.day}, ${formatDate(item.date)}</p>
-                            <h2 class="text-xl font-bold text-gray-900 mt-1">${item.subject}</h2>
-                            <div class="flex flex-wrap gap-x-4 gap-y-2 text-gray-600 mt-3">
-                                <span class="flex items-center gap-1.5">
-                                    <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm.75-13a.75.75 0 00-1.5 0v5c0 .414.336.75.75.75h4a.75.75 0 000-1.5H10.75V5z" clip-rule="evenodd" /></svg>
-                                    ${item.time} WIB
-                                </span>
-                                <span class="flex items-center gap-1.5">
-                                    <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9.293 2.293a1 1 0 011.414 0l7 7A1 1 0 0117 10.414V17a1 1 0 01-1 1h-3a1 1 0 01-1-1v-3a1 1 0 00-1-1H9a1 1 0 00-1 1v3a1 1 0 01-1 1H4a1 1 0 01-1-1V10.414a1 1 0 01.293-.707l7-7z" clip-rule="evenodd" /></svg>
-                                    Ruang: ${item.room}
-                                </span>
-                                <span class="flex items-center gap-1.5">
-                                    <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M11.25 5.337c0-.355-.186-.676-.401-.959a.75.75 0 00-1.015-.099l-5.25 3.5a.75.75 0 000 1.222l5.25 3.5a.75.75 0 001.015-.099c.215-.283.401-.604.401-.959V12a1 1 0 112 0v.5A2.25 2.25 0 0110.5 15c-.463 0-.901-.14-.125-.389V5.772A2.215 2.215 0 0110.5 3 2.25 2.25 0 0112.75 5.25v.087c0 .355.186.676.401.959a.75.75 0 001.015.099l2.25-1.5a.75.75 0 000-1.222l-2.25-1.5a.75.75 0 00-1.015.099c-.215.283-.401.604-.401-.959V3a1 1 0 11-2 0v2.337z" /><path d="M5 6.25a.75.75 0 00-1.5 0v7.5a.75.75 0 001.5 0v-7.5z" /></svg>
-                                    Kursi: ${item.seat}
-                                </span>
+                    <!-- Bilah Warna Hari -->
+                    <div class="day-bar ${dayColorClass}"></div>
+                    
+                    <div class="p-6 pl-10"> <!-- Padding kiri ditambah untuk memberi ruang pada bilah warna -->
+                        <div class="flex flex-col justify-between h-full gap-4">
+                            <div>
+                                <!-- Bagian Atas: Tanggal dan Checkbox Selesai -->
+                                <div class="flex justify-between items-start mb-2">
+                                    <p class="text-sm font-semibold text-indigo-700">${item.day}, ${formatDate(item.date)}</p>
+                                    <div class="flex items-center gap-2 text-sm text-gray-600">
+                                        <label for="check-${item.id}" class="cursor-pointer">Selesai</label>
+                                        <input type="checkbox" id="check-${item.id}" data-id="${item.id}" 
+                                               class="h-5 w-5 rounded text-indigo-600 focus:ring-indigo-500 border-gray-300 cursor-pointer" 
+                                               ${isCompleted ? 'checked' : ''}>
+                                    </div>
+                                </div>
+                                
+                                <!-- Judul Mata Kuliah -->
+                                <h2 class="text-2xl font-bold text-gray-900 ${isCompleted ? 'line-through' : ''}">${item.subject}</h2>
+                                
+                                <!-- Detail Ujian -->
+                                <div class="flex flex-wrap gap-x-5 gap-y-2 text-gray-600 mt-3">
+                                    <span class="flex items-center gap-1.5" title="Waktu">
+                                        <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm.75-13a.75.75 0 00-1.5 0v5c0 .414.336.75.75.75h4a.75.75 0 000-1.5H10.75V5z" clip-rule="evenodd" /></svg>
+                                        ${item.time} WIB
+                                    </span>
+                                    <span class="flex items-center gap-1.5" title="Ruang Ujian">
+                                        <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9.293 2.293a1 1 0 011.414 0l7 7A1 1 0 0117 10.414V17a1 1 0 01-1 1h-3a1 1 0 01-1-1v-3a1 1 0 00-1-1H9a1 1 0 00-1 1v3a1 1 0 01-1 1H4a1 1 0 01-1-1V10.414a1 1 0 01.293-.707l7-7z" clip-rule="evenodd" /></svg>
+                                        Ruang: ${item.room}
+                                    </span>
+                                    <span class="flex items-center gap-1.5" title="Nomor Kursi">
+                                        <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M11.25 5.337c0-.355-.186-.676-.401-.959a.75.75 0 00-1.015-.099l-5.25 3.5a.75.75 0 000 1.222l5.25 3.5a.75.75 0 001.015-.099c.215-.283.401-.604.401-.959V12a1 1 0 112 0v.5A2.25 2.25 0 0110.5 15c-.463 0-.901-.14-.125-.389V5.772A2.215 2.215 0 0110.5 3 2.25 2.25 0 0112.75 5.25v.087c0 .355.186.676.401.959a.75.75 0 001.015.099l2.25-1.5a.75.75 0 000-1.222l-2.25-1.5a.75.75 0 00-1.015.099c-.215.283-.401.604-.401-.959V3a1 1 0 11-2 0v2.337z" /><path d="M5 6.25a.75.75 0 00-1.5 0v7.5a.75.75 0 001.5 0v-7.5z" /></svg>
+                                        Kursi: ${item.seat}
+                                    </span>
+                                </div>
                             </div>
+                            
+                            <!-- Tombol Aksi -->
+                            <a href="${gCalLink}" target="_blank" rel="noopener noreferrer" 
+                               class="w-full bg-indigo-600 text-white font-semibold py-3 px-4 rounded-lg shadow-md btn-animated flex items-center justify-center gap-2 text-center 
+                                      ${isCompleted ? 'opacity-50 cursor-not-allowed bg-gray-400' : 'hover:bg-indigo-700'}"
+                               ${isCompleted ? 'aria-disabled="true" tabindex="-1"' : ''}>
+                                <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M5.25 3A2.25 2.25 0 003 5.25v9.5A2.25 2.25 0 005.25 17h9.5A2.25 2.25 0 0017 14.75V8.25A2.25 2.25 0 0014.75 6H12v2.25A2.25 2.25 0 019.75 10.5h-1.5A2.25 2.25 0 016 8.25V6H5.25zm3.75 3a.75.75 0 000 1.5h1.5a.75.75 0 000-1.5h-1.5z" /></svg>
+                                Tambah ke Kalender
+                            </a>
                         </div>
-                        <a href="${gCalLink}" target="_blank" rel="noopener noreferrer" class="w-full bg-blue-700 hover:bg-blue-800 text-white font-semibold py-3 px-4 rounded-lg shadow-md transition duration-300 flex items-center justify-center gap-2 text-center">
-                            <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M5.25 3A2.25 2.25 0 003 5.25v9.5A2.25 2.25 0 005.25 17h9.5A2.25 2.25 0 0017 14.75V8.25A2.25 2.25 0 0014.75 6H12v2.25A2.25 2.25 0 019.75 10.5h-1.5A2.25 2.25 0 016 8.25V6H5.25zm3.75 3a.75.75 0 000 1.5h1.5a.75.75 0 000-1.5h-1.5z" /></svg>
-                            Tambah ke Kalender
-                        </a>
                     </div>
                 `;
                 scheduleList.appendChild(card);
             });
 
-            // Setelah mengisi jadwal, perbarui hitung mundur
+            // Tambahkan event listener untuk checkbox setelah dibuat
+            addCheckboxListeners();
+            // Perbarui hitung mundur
             updateCountdown();
+        }
+
+        /**
+         * Menambahkan event listener ke semua checkbox
+         */
+        function addCheckboxListeners() {
+            const checkboxes = scheduleList.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(cb => {
+                cb.addEventListener('change', (e) => {
+                    const examId = e.target.dataset.id;
+                    const isChecked = e.target.checked;
+                    completedExams[examId] = isChecked;
+                    saveCompletedStatus();
+                    
+                    // Perbarui tampilan kartu secara langsung
+                    const card = e.target.closest('.card-animated');
+                    const title = card.querySelector('h2');
+                    const gcalButton = card.querySelector('a[target="_blank"]');
+                    
+                    if (isChecked) {
+                        card.classList.add('opacity-60');
+                        title.classList.add('line-through');
+                        gcalButton.classList.add('opacity-50', 'cursor-not-allowed', 'bg-gray-400');
+                        gcalButton.classList.remove('hover:bg-indigo-700');
+                        gcalButton.setAttribute('aria-disabled', 'true');
+                        gcalButton.setAttribute('tabindex', '-1');
+                    } else {
+                        card.classList.remove('opacity-60');
+                        title.classList.remove('line-through');
+                        gcalButton.classList.remove('opacity-50', 'cursor-not-allowed', 'bg-gray-400');
+                        gcalButton.classList.add('hover:bg-indigo-700');
+                        gcalButton.removeAttribute('aria-disabled');
+                        gcalButton.removeAttribute('tabindex');
+                    }
+                });
+            });
         }
 
         /**
@@ -181,9 +297,7 @@
          * Mengurutkan data
          */
         function sortData(data, sortBy) {
-            // Salin data agar tidak mengubah data aslinya
             const dataToSort = [...data];
-
             if (sortBy === 'date') {
                 return dataToSort.sort((a, b) => {
                     const dateTimeA = new Date(`${a.date}T${a.time}`);
@@ -203,7 +317,6 @@
             const startTime = new Date(`${item.date}T${item.time}:00+07:00`); // Asumsi WIB (GMT+7)
             const endTime = new Date(startTime.getTime() + durationHours * 60 * 60 * 1000);
 
-            // Format YYYYMMDDTHHMMSSZ
             const formatGCalTime = (date) => date.toISOString().replace(/-|:|\.\d+/g, '');
 
             const gCalDetails = {
@@ -231,7 +344,6 @@
             for (const item of sortedByDate) {
                 const { endTime } = generateGCalLink(item);
                 if (endTime > now) {
-                    // Ini adalah ujian berikutnya atau yang sedang berlangsung
                     return item;
                 }
             }
@@ -262,7 +374,6 @@
                 const { startTime, endTime } = generateGCalLink(nextExam);
 
                 if (now < startTime) {
-                    // Hitung mundur menuju ujian
                     const diff = startTime - now;
                     const d = Math.floor(diff / (1000 * 60 * 60 * 24));
                     const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
@@ -270,12 +381,10 @@
                     const s = Math.floor((diff % (1000 * 60)) / 1000);
                     countdownTimer.textContent = `${d} hari ${h} jam ${m} mnt ${s} dtk`;
                 } else if (now >= startTime && now < endTime) {
-                    // Ujian sedang berlangsung
                     countdownTimer.textContent = "Sedang Berlangsung!";
                 } else {
-                    // Ujian ini baru saja selesai, cari berikutnya
                     clearInterval(countdownInterval);
-                    updateCountdown(); // Rekursif untuk mencari ujian berikutnya
+                    updateCountdown(); 
                 }
             }, 1000);
         }
@@ -296,11 +405,8 @@
 
             dataToExport.forEach(item => {
                 const { startTime, endTime } = generateGCalLink(item);
-                
-                // Format YYYYMMDDTHHMMSS
                 const formatICSTime = (date) => date.toISOString().replace(/-|:|\.\d+/g, '').slice(0, 15);
-
-                const uid = `${formatICSTime(startTime)}-${item.subject.replace(/ /g, '')}@jadwal.uts`;
+                const uid = `${formatICSTime(startTime)}-${item.id}@jadwal.uts`;
 
                 icsContent.push(
                     'BEGIN:VEVENT',
@@ -317,7 +423,6 @@
 
             icsContent.push('END:VCALENDAR');
 
-            // Buat file dan trigger download
             const blob = new Blob([icsContent.join('\r\n')], { type: 'text/calendar' });
             const link = document.createElement('a');
             link.href = URL.createObjectURL(blob);
@@ -328,17 +433,14 @@
 
         // --- EVENT LISTENERS ---
 
-        // Saat halaman dimuat
         document.addEventListener('DOMContentLoaded', () => {
-            populateSchedule('date'); // Urutkan berdasarkan tanggal saat pertama dimuat
+            populateSchedule('date'); 
         });
 
-        // Saat pilihan urutan diubah
         sortOrderSelect.addEventListener('change', (e) => {
             populateSchedule(e.target.value);
         });
 
-        // Saat tombol ekspor diklik
         exportAllButton.addEventListener('click', generateICSFile);
 
         // --- PWA Service Worker ---
