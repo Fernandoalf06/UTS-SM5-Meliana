@@ -48,7 +48,6 @@ Durasi default setiap ujian: 2 jam (dipakai oleh [`generateGCalLink`](index.html
 - Manifest: [manifest.json](manifest.json) — metadata PWA dan ikon.
 
 ## Pengembangan
-- Styling utama ada di [style.css](style.css). Untuk menyesuaikan tema/warna, ubah variabel di :root.
 - Logika UI dan export berada di [index.html](index.html). Untuk menambah field pada jadwal, perbarui `scheduleData` dan fungsi rendering (`populateSchedule`).
 
 ## Kontribusi
